@@ -1,5 +1,7 @@
 {
     "java.project.sourcePaths": [
-        "fewoVerwaltung/src"
-    ]
+        "fewoVerwaltung/src",
+        "src"
+    ],
+    "java.configuration.updateBuildConfiguration": "disabled"
 }
