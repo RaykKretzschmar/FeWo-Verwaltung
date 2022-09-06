@@ -124,6 +124,7 @@ public class auswahlDialog extends JFrame implements ActionListener {
             d.setVisible(true);
 
             // Erstellen der Rechnung
+
             String templateName = "Rechnungsvorlage.docx";
             HashMap<String, String> substitutionData = new HashMap<String, String>();
             substitutionData.put("#{Anrede}", "Herr");

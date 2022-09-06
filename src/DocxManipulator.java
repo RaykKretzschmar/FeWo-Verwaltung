@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 public class DocxManipulator {
 
-  private static final String MAIN_DOCUMENT_PATH = "/Users/rayk/JavaProjects/FeWo-Verwaltung/src/Rechnungsvorlage.docx";
-  private static final String TEMPLATE_DIRECTORY_ROOT = "/Users/rayk/JavaProjects/FeWo-Verwaltung/src/";
+  private static final String MAIN_DOCUMENT_PATH = "word/document.xml";
+  private static final String TEMPLATE_DIRECTORY_ROOT = "TEMPLATES_DIRECTORY/";
 
   /* PUBLIC METHODS */
 
@@ -21,8 +21,7 @@ public class DocxManipulator {
    *                         Template data
    * @param substitutionData
    *                         Hash map with the set of key-value pairs that
-   *                         represent
-   *                         substitution data
+   *                         represent substitution data
    * @return
    */
   public static Boolean generateAndSendDocx(String templateName, Map<String, String> substitutionData) {
