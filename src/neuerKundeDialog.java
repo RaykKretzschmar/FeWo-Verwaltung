@@ -16,6 +16,26 @@ public class neuerKundeDialog extends JFrame implements ActionListener {
     JPanel panel;
     JPanel buttonPanel;
 
+    JPanel nickPanel = new JPanel();
+    JPanel anredePanel = new JPanel();
+    JPanel vornamePanel = new JPanel();
+    JPanel nachnamePanel = new JPanel();
+    JPanel stadtPanel = new JPanel();
+    JPanel plzPanel = new JPanel();
+    JPanel straßePanel = new JPanel();
+    JPanel hausnummerPanel = new JPanel();
+    JPanel kundennummerPanel = new JPanel();
+
+    JPanel nickTextPanel = new JPanel();
+    JPanel anredeTextPanel = new JPanel();
+    JPanel vornameTextPanel = new JPanel();
+    JPanel nachnameTextPanel = new JPanel();
+    JPanel stadtTextPanel = new JPanel();
+    JPanel plzTextPanel = new JPanel();
+    JPanel straßeTextPanel = new JPanel();
+    JPanel hausnummerTextPanel = new JPanel();
+    JPanel kundennummerTextPanel = new JPanel();
+
     JLabel nickLabel = new JLabel("Kürzel : ", SwingConstants.RIGHT);
     JLabel anredeLabel = new JLabel("Anrede : ", SwingConstants.RIGHT);
     JLabel vornameLabel = new JLabel("Vorname : ", SwingConstants.RIGHT);
@@ -52,33 +72,72 @@ public class neuerKundeDialog extends JFrame implements ActionListener {
         speichernButton.addActionListener(this);
         abbrechenButton.addActionListener(this);
 
+        nickTextPanel.setSize(200, 20);
+        anredeTextPanel.setSize(200, 20);
+        vornameTextPanel.setSize(200, 20);
+        nachnameTextPanel.setSize(200, 20);
+        stadtTextPanel.setSize(200, 20);
+        plzTextPanel.setSize(200, 20);
+        straßeTextPanel.setSize(200, 20);
+        hausnummerTextPanel.setSize(200, 20);
+        kundennummerTextPanel.setSize(200, 20);
+
+        nickPanel.setLayout(new java.awt.BorderLayout());
+        anredePanel.setLayout(new java.awt.BorderLayout());
+        vornamePanel.setLayout(new java.awt.BorderLayout());
+        nachnamePanel.setLayout(new java.awt.BorderLayout());
+        stadtPanel.setLayout(new java.awt.BorderLayout());
+        plzPanel.setLayout(new java.awt.BorderLayout());
+        straßePanel.setLayout(new java.awt.BorderLayout());
+        hausnummerPanel.setLayout(new java.awt.BorderLayout());
+        kundennummerPanel.setLayout(new java.awt.BorderLayout());
+
+        nickTextPanel.add(nickTextField);
+        anredeTextPanel.add(anredeTextField);
+        vornameTextPanel.add(vornameTextField);
+        nachnameTextPanel.add(nachnameTextField);
+        stadtTextPanel.add(stadtTextField);
+        plzTextPanel.add(plzTextField);
+        straßeTextPanel.add(straßeTextField);
+        hausnummerTextPanel.add(hausnummerTextField);
+        kundennummerTextPanel.add(kundennummerTextField);
+
+        nickPanel.add(nickTextPanel, java.awt.BorderLayout.CENTER);
+        anredePanel.add(anredeTextPanel, java.awt.BorderLayout.CENTER);
+        vornamePanel.add(vornameTextPanel, java.awt.BorderLayout.CENTER);
+        nachnamePanel.add(nachnameTextPanel, java.awt.BorderLayout.CENTER);
+        stadtPanel.add(stadtTextPanel, java.awt.BorderLayout.CENTER);
+        plzPanel.add(plzTextPanel, java.awt.BorderLayout.CENTER);
+        straßePanel.add(straßeTextPanel, java.awt.BorderLayout.CENTER);
+        hausnummerPanel.add(hausnummerTextPanel, java.awt.BorderLayout.CENTER);
+        kundennummerPanel.add(kundennummerTextPanel, java.awt.BorderLayout.CENTER);
+
         panel.add(nickLabel);
-        panel.add(nickTextField);
+        panel.add(nickPanel);
         panel.add(new JLabel());
         panel.add(anredeLabel);
-        panel.add(anredeTextField);
+        panel.add(anredePanel);
         panel.add(new JLabel());
         panel.add(vornameLabel);
-        panel.add(vornameTextField);
+        panel.add(vornamePanel);
         panel.add(new JLabel());
         panel.add(nachnameLabel);
-        panel.add(nachnameTextField);
+        panel.add(nachnamePanel);
         panel.add(new JLabel());
         panel.add(stadtLabel);
-        panel.add(stadtTextField);
+        panel.add(stadtPanel);
         panel.add(new JLabel());
         panel.add(plzLabel);
-        panel.add(plzTextField);
+        panel.add(plzPanel);
         panel.add(new JLabel());
         panel.add(straßeLabel);
-        panel.add(straßeTextField);
+        panel.add(straßePanel);
         panel.add(new JLabel());
         panel.add(hausnummerLabel);
-        panel.add(hausnummerTextField);
+        panel.add(hausnummerPanel);
         panel.add(new JLabel());
         panel.add(kundennummerLabel);
-        panel.add(kundennummerTextField);
-        panel.add(new JLabel());
+        panel.add(kundennummerPanel);
 
         buttonPanel.add(speichernButton);
         buttonPanel.add(abbrechenButton);

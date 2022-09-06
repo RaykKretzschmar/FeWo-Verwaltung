@@ -8,22 +8,25 @@ import javax.swing.*;
 // ActionListener implementiert werden
 public class VerwaltungListener extends JFrame implements ActionListener {
     JButton neuerKundeButton;
-    JButton auswaehlenKundeButton;
+    JButton rechnungButton;
     JPanel panel;
 
+    // erzeugt zwei Button
+    // je nachdem ob man einen neuen Kunden hinzufügen oder eine Rechnung erstellen
+    // möchte
     public VerwaltungListener() {
         this.setTitle("Fewo Kundenverwaltung by Rayk Kretzschmar");
         this.setSize(1600, 900);
         panel = new JPanel();
 
         neuerKundeButton = new JButton("neuer Kunde");
-        auswaehlenKundeButton = new JButton("Kunde auswählen");
+        rechnungButton = new JButton("Rechnung erstellen");
 
         neuerKundeButton.addActionListener(this);
-        auswaehlenKundeButton.addActionListener(this);
+        rechnungButton.addActionListener(this);
 
-        panel.add(neuerKundeButton);
-        panel.add(auswaehlenKundeButton);
+        panel.add(neuerKundeButton, java.awt.BorderLayout.CENTER);
+        panel.add(rechnungButton, java.awt.BorderLayout.CENTER);
 
         this.add(panel);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -31,14 +34,10 @@ public class VerwaltungListener extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        // Die Quelle wird mit getSource() abgefragt und mit den
-        // Buttons abgeglichen. Wenn die Quelle des ActionEvents einer
-        // der Buttons ist, wird der Text des JLabels entsprechend geändert
         if (ae.getSource() == this.neuerKundeButton) {
             neuerKundeDialog kd = new neuerKundeDialog();
             kd.setVisible(true);
-        } else if (ae.getSource() == this.auswaehlenKundeButton) {
-            // hole eine Liste aller Kunden und zeige sie in einem Fenster
+        } else if (ae.getSource() == this.rechnungButton) {
             // Kunden auswählen und dann Rechnung erstellen
             auswahlDialog ad = new auswahlDialog();
             ad.setVisible(true);
