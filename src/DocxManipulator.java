@@ -7,6 +7,10 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.xwpf.usermodel.*;
+import org.apache.poi.openxml4j.opc.*;
+
 public class DocxManipulator {
 
   private static final String MAIN_DOCUMENT_PATH = "word/document.xml";
@@ -105,8 +109,9 @@ public class DocxManipulator {
     try {
       br = new BufferedReader(new InputStreamReader(new FileInputStream(targetFile), "UTF-8"));
       String temp;
-      while ((temp = br.readLine()) != null)
+      while ((temp = br.readLine()) != null){
         docxTemplate = docxTemplate + temp;
+      }
       br.close();
       targetFile.delete();
     } catch (IOException e) {
@@ -284,4 +289,50 @@ public class DocxManipulator {
     }
   }
 
+  public static void replaceIn(String inputFileName, String key, String replacement, String outputFileName) throws IOException, 
+    InvalidFormatException, org.apache.poi.openxml4j.exceptions.InvalidFormatException {
+      try {
+
+       /**
+        * if uploaded doc then use HWPF else if uploaded Docx file use
+        * XWPFDocument
+        */
+       XWPFDocument doc = new XWPFDocument(
+         //OPCPackage.open("d:\\1\\rpt.docx"));
+         OPCPackage.open(inputFileName));
+       for (XWPFParagraph p : doc.getParagraphs()) {
+        List<XWPFRun> runs = p.getRuns();
+        if (runs != null) {
+         for (XWPFRun r : runs) {
+          String text = r.getText(0);
+          if (text != null && text.contains(key)) {
+           text = text.replace(key, replacement);//your content
+           r.setText(text, 0);
+          }
+         }
+        }
+       }
+
+       for (XWPFTable tbl : doc.getTables()) {
+        for (XWPFTableRow row : tbl.getRows()) {
+         for (XWPFTableCell cell : row.getTableCells()) {
+          for (XWPFParagraph p : cell.getParagraphs()) {
+           for (XWPFRun r : p.getRuns()) {
+            String text = r.getText(0);
+            if (text != null && text.contains(key)) {
+             text = text.replace(key, replacement);
+             r.setText(text, 0);
+            }
+           }
+          }
+         }
+        }
+       }
+
+       //doc.write(new FileOutputStream("d:\\1\\output.docx"));
+       doc.write(new FileOutputStream(outputFileName));
+      } finally {
+
+      }
+    }
 }

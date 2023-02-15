@@ -125,11 +125,16 @@ public class auswahlDialog extends JFrame implements ActionListener {
 
             // Erstellen der Rechnung
 
-            String templateName = "Rechnungsvorlage.docx";
-            HashMap<String, String> substitutionData = new HashMap<String, String>();
-            substitutionData.put("#{Anrede}", "Herr");
+            // String templateName = "Rechnungsvorlage.docx";
+            // HashMap<String, String> substitutionData = new HashMap<String, String>();
+            // substitutionData.put("#{Anrede}", "Herr");
+            // DocxManipulator.generateAndSendDocx(templateName, substitutionData);
 
-            DocxManipulator.generateAndSendDocx(templateName, substitutionData);
+            // Document doc = new Document("TEMPLATES_DIRECTORY/Rechnungsvorlage.docx");
+
+            // doc.getRange().replace("#{Anrede}", "Herr", new FindReplaceOptions(FindReplaceDirection.FORWARD));
+
+            // doc.save("neueRechnung.docx");
 
             this.dispose();
         }
