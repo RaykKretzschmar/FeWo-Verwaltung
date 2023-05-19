@@ -1,6 +1,7 @@
 import tkinter as tk
 import csv
 import docx
+import datetime
 
 def replace_text(replacements, doc_path="Rechnungsvorlage.docx"):
     doc = Document(doc_path)
