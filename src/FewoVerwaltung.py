@@ -1,7 +1,6 @@
 import tkinter as tk
 import csv
-import docx
-import datetime
+import Textersetzung
 
 class NeuerKundeDialog(tk.Toplevel):
     def __init__(self, parent):
@@ -44,7 +43,7 @@ class AuswahlDialog(tk.Toplevel):
         self.title("Kunde auswählen")
         self.configure(bg='white')
 
-        self.labels = ["Kürzel", "Anrede", "Vorname", "Nachname", "Stadt", "Postleitzahl", "Straße", "Hausnummer", "Kundennummer"]
+        self.labels = ["Kürzel", "Anrede", "Vorname", "Nachname", "Stadt", "PLZ", "Straße", "Hausnummer", "Kundennummer"]
         self.checkboxes = []
 
         for i, label in enumerate(self.labels):
@@ -52,15 +51,19 @@ class AuswahlDialog(tk.Toplevel):
             label_widget.grid(row=0, column=i, sticky='ew')
             self.grid_columnconfigure(i, weight=1)
 
+        self.checkbutton_vars = []
+
         with open('Kunden.csv', 'r') as f:
             reader = csv.reader(f)
             for i, line in enumerate(reader, start=1):
                 for j, element in enumerate(line):
                     data_widget = tk.Label(self, text=element, bg='white', fg='black', font=('Arial', 12))
                     data_widget.grid(row=i, column=j, sticky='ew')
-                checkbox = tk.Checkbutton(self, bg='white')
+                
+                var = tk.IntVar()
+                checkbox = tk.Checkbutton(self, bg='white', variable=var)
                 checkbox.grid(row=i, column=len(self.labels), sticky='ew')
-                self.checkboxes.append(checkbox)
+                self.checkbutton_vars.append(var)
             self.grid_rowconfigure(i, weight=1)
 
         self.abbruch_button = tk.Button(self, text="Abbrechen", command=self.destroy, fg='black', bg='white', font=('Arial', 12))
@@ -70,49 +73,18 @@ class AuswahlDialog(tk.Toplevel):
         self.bestätigen_button.grid(row=i+1, column=1, sticky='ew')
 
     def bestätigen(self):
-        selected_customers = []
-        for i, checkbox in enumerate(self.checkboxes):
-            print(i)
-            # if checkbox.state():
-            #     selected_customers.append(self.data[i])
+        selected_rows = [i for i, var in enumerate(self.checkbutton_vars) if var.get() == 1]
+        print(f"Selected rows: {selected_rows}")  # Debug print
 
-        for customer in selected_customers:
-            replacements = {
-                "Kürzel": customer[0],
-                "Anrede": customer[1],
-                "Vorname": customer[2],
-                "Nachname": customer[3],
-                "Stadt": customer[4],
-                "Postleitzahl": customer[5],
-                "Straße": customer[6],
-                "Hausnummer": customer[7],
-                "Kundennummer": customer[8],
-            }
-            replace_text(replacements)
+        with open('Kunden.csv', 'r') as f:
+            reader = csv.reader(f)
+            for i, line in enumerate(reader):
+                if i in selected_rows:
+                    replacements = {self.labels[j]: element for j, element in enumerate(line)}
+                    print(f"Replacements: {replacements}")  # Debug print
+                    Textersetzung.replace_text(replacements)
 
-        # Then close the dialog
         self.destroy()
-
-    def replace_text(replacements, doc_path="Rechnungsvorlage.docx"):
-        doc = Document(doc_path)
-
-        # Go through each paragraph in the document
-        for p in doc.paragraphs:
-            inline = p.runs
-            for i in range(len(inline)):
-                for old_text, new_text in replacements.items():
-                    if old_text in inline[i].text:
-                        text = inline[i].text.replace(old_text, new_text)
-                        inline[i].text = text
-
-        datum = datetime.datetime.now()
-        tag = datum.strftime("%d")
-        monat = datum.strftime("%m")
-        jahr = datum.strftime("%Y")
-
-        # Save the document
-        file_path = f"Rechnung{tag}{monat}{jahr}.docx"
-        doc.save(file_path)
 
 
 class VerwaltungListener(tk.Tk):
@@ -120,13 +92,21 @@ class VerwaltungListener(tk.Tk):
         super().__init__()
 
         self.title("Fewo Kundenverwaltung by Rayk Kretzschmar")
-        self.geometry("1600x900")
+        self.geometry("800x600")
+        self.configure(bg='white')
 
-        self.neuerKundeButton = tk.Button(self, text="Neuer Kunde", command=self.open_neuerKundeDialog)
-        self.rechnungButton = tk.Button(self, text="Rechnung erstellen", command=self.open_auswahlDialog)
+        # Adjust font, colors, and padding of the buttons
+        self.neuerKundeButton = tk.Button(self, text="Neuer Kunde", command=self.open_neuerKundeDialog, font=('Arial', 14), bg='skyblue', fg='black', padx=10, pady=10)
+        self.rechnungButton = tk.Button(self, text="Rechnung erstellen", command=self.open_auswahlDialog, font=('Arial', 14), bg='skyblue', fg='black', padx=10, pady=10)
 
-        self.neuerKundeButton.pack()
-        self.rechnungButton.pack()
+        # Use grid layout manager and add some margins
+        self.neuerKundeButton.grid(row=0, column=0, padx=10, pady=10, sticky='nsew')
+        self.rechnungButton.grid(row=0, column=1, padx=10, pady=10, sticky='nsew')
+
+        # Configure the columns and row to expand when the window is resized
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_rowconfigure(0, weight=1)
 
     def open_neuerKundeDialog(self):
         NeuerKundeDialog(self)
