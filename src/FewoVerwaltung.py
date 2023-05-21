@@ -41,49 +41,73 @@ class AuswahlDialog(tk.Toplevel):
         super().__init__(parent)
 
         self.title("Kunde auswählen")
-        self.configure(bg='white')
+        self.configure()
 
         self.labels = ["Kürzel", "Anrede", "Vorname", "Nachname", "Stadt", "PLZ", "Straße", "Hausnummer", "Kundennummer"]
         self.checkboxes = []
 
         for i, label in enumerate(self.labels):
-            label_widget = tk.Label(self, text=label, bg='white', fg='black', font=('Arial', 14))
+            label_widget = tk.Label(self, text=label, font=('Arial', 14))
             label_widget.grid(row=0, column=i, sticky='ew')
             self.grid_columnconfigure(i, weight=1)
 
-        self.checkbutton_vars = []
+        self.selected_data = None  # Store the selected data
 
         with open('Kunden.csv', 'r') as f:
             reader = csv.reader(f)
             for i, line in enumerate(reader, start=1):
                 for j, element in enumerate(line):
-                    data_widget = tk.Label(self, text=element, bg='white', fg='black', font=('Arial', 12))
+                    data_widget = tk.Label(self, text=element, font=('Arial', 12))
                     data_widget.grid(row=i, column=j, sticky='ew')
                 
-                var = tk.IntVar()
-                checkbox = tk.Checkbutton(self, bg='white', variable=var)
-                checkbox.grid(row=i, column=len(self.labels), sticky='ew')
-                self.checkbutton_vars.append(var)
+                button = tk.Button(self, text="Rechnung", command=lambda line=line: self.select_data(line))
+                button.grid(row=i, column=len(self.labels), sticky='ew')
+
             self.grid_rowconfigure(i, weight=1)
 
-        self.abbruch_button = tk.Button(self, text="Abbrechen", command=self.destroy, fg='black', bg='white', font=('Arial', 12))
+        self.abbruch_button = tk.Button(self, text="Abbrechen", command=self.destroy, font=('Arial', 12))
         self.abbruch_button.grid(row=i+1, column=0, sticky='ew')
 
-        self.bestätigen_button = tk.Button(self, text="Bestätigen", command=self.bestätigen, fg='black', bg='white', font=('Arial', 12))
-        self.bestätigen_button.grid(row=i+1, column=1, sticky='ew')
+    def select_data(self, data):
+        self.selected_data = {self.labels[i]: val for i, val in enumerate(data)}
+        EingabeDialog(self, self.selected_data)
 
-    def bestätigen(self):
-        selected_rows = [i for i, var in enumerate(self.checkbutton_vars) if var.get() == 1]
-        print(f"Selected rows: {selected_rows}")  # Debug print
 
-        with open('Kunden.csv', 'r') as f:
-            reader = csv.reader(f)
-            for i, line in enumerate(reader):
-                if i in selected_rows:
-                    replacements = {self.labels[j]: element for j, element in enumerate(line)}
-                    print(f"Replacements: {replacements}")  # Debug print
-                    Textersetzung.replace_text(replacements)
+class EingabeDialog(tk.Toplevel):
+    def __init__(self, parent, data):
+        super().__init__(parent)
 
+        self.title("Rechnung erstellen")
+
+        # data should be a dictionary
+        for i, (k, v) in enumerate(data.items()):
+            tk.Label(self, text=f"{k} : {v}", anchor="e").grid(row=i, column=0, sticky="e")
+
+        self.new_labels = {
+            "Datum": tk.StringVar(),
+            "Rechnungsnummer": tk.StringVar(),
+            "Anreisedatum": tk.StringVar(),
+            "Abreisedatum": tk.StringVar(),
+            "Name der Ferienwohnung": tk.StringVar(),
+            "Preis pro Nacht": tk.StringVar(),
+        }
+
+        for j, (k, v) in enumerate(self.new_labels.items(), start=i+1):
+            tk.Label(self, text=f"{k} : ", anchor="e").grid(row=j, column=0, sticky="e")
+            tk.Entry(self, textvariable=v, width=30).grid(row=j, column=1, sticky="ew")
+
+        tk.Button(self, text="Speichern", command=self.save).grid(row=j+1, column=0)
+        tk.Button(self, text="Abbrechen", command=self.destroy).grid(row=j+1, column=1)
+
+        self.grid_columnconfigure(1, weight=1)  # make the second column expandable
+
+    def save(self):
+        # Merge selected data and new data
+        all_data = {**self.parent.selected_data, **{k: v.get() for k, v in self.new_labels.items()}}
+
+        with open('Kunden.csv', 'a', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(all_data.values())
         self.destroy()
 
 
