@@ -118,7 +118,7 @@ class EingabeDialog(tk.Toplevel):
 
         self.new_labels = {
             "Datum": tk.StringVar(),
-            "Rechnungsnummer": tk.StringVar(), # Please don't enter "/". This will break the invoice creation process.
+            "Rechnungsnummer": tk.StringVar(),
             "Anreisedatum": tk.StringVar(),
             "Abreisedatum": tk.StringVar(),
             "Name der Ferienwohnung": tk.StringVar(),
