@@ -1,11 +1,12 @@
 import tkinter as tk
+from tkinter import filedialog
 import csv
 import datetime
 from docx import Document
 
 class Textersetzung():
-    def replace_text(replacements, save_path, doc_path="Rechnungsvorlage.docx"):
-        doc = Document(doc_path)
+    def replace_text(replacements, save_path, template_path="Rechnungsvorlage.docx"):
+        doc = Document(template_path)
 
         # Go through each paragraph in the document
         for p in doc.paragraphs:
@@ -171,9 +172,22 @@ class EingabeDialog(tk.Toplevel):
                     'NettoBetrag': f'{net_amount:.2f}'.replace('.', ','),
                     }
 
-        # replace text in .docx
+        # Open a dialog to select the invoice template
+        template_file_path = filedialog.askopenfilename(
+            title="Wählen Sie eine Rechnungsvorlage aus", 
+            filetypes=(("Word-Dokumente", "*.docx"), ("Alle Dateien", "*.*"))
+        )
+
+        # Open a dialog to select where to save the invoice
+        invoice_file_path = filedialog.asksaveasfilename(
+            title="Wählen Sie, wo die Rechnung gespeichert werden soll",
+            filetypes=(("Word-Dokumente", "*.docx"), ("Alle Dateien", "*.*")),
+            defaultextension=".docx"
+        )
+
+        # Replace text in .docx
         invoice_number = self.new_labels['Rechnungsnummer'].get()
-        Textersetzung.replace_text(all_data, f'Rechnung{invoice_number}.docx')
+        Textersetzung.replace_text(all_data, save_path=invoice_file_path, template_path=template_file_path)
 
         self.destroy()
 
