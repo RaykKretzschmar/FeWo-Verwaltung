@@ -31,7 +31,7 @@ Before running the application, make sure you have the following:
 ## How to Run the Application
 1. Run the Python script in your terminal or command line:
 
->python fewo_verwaltung.py
+>python FewoVerwaltung.py
 2. When the application opens, click on the "Neuer Kunde" button to add a new customer.
 
 3. Click on the "Rechnung erstellen" button to select a customer and generate an invoice.
