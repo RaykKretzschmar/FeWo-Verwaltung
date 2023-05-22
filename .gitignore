@@ -10,3 +10,8 @@ neu_Rechnungsvorlage.docx
 src/__pycache__/
 ~$chnungsvorlage.docx
 src/legacy_java/
+.gradle/
+.gradle
+build.gradle
+.gradle/buildOutputCleanup/buildOutputCleanup.lock
+.gradle/buildOutputCleanup/cache.properties

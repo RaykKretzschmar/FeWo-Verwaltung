@@ -10,32 +10,24 @@ class Textersetzung():
 
         # Go through each paragraph in the document
         for p in doc.paragraphs:
-            full_text = p.text
-            for old_text, new_text in replacements.items():
-                full_text = full_text.replace(old_text, new_text)
-            # Clear the paragraph and replace with new text
-            p.clear()
-            p.add_run(full_text)
-        
+            for run in p.runs:
+                for old_text, new_text in replacements.items():
+                    if old_text in run.text:
+                        run.text = run.text.replace(old_text, new_text)
+
         # Go through each table in the document
         for table in doc.tables:
             for row in table.rows:
                 for cell in row.cells:
-                    full_text = cell.text
-                    for old_text, new_text in replacements.items():
-                        full_text = full_text.replace(old_text, new_text)
-                    # Clear the cell and replace with new text
-                    cell.text = full_text
+                    for paragraph in cell.paragraphs:
+                        for run in paragraph.runs:
+                            for old_text, new_text in replacements.items():
+                                if old_text in run.text:
+                                    run.text = run.text.replace(old_text, new_text)
 
-        if not save_path:
-            datum = datetime.datetime.now()
-            tag = datum.strftime("%d")
-            monat = datum.strftime("%m")
-            jahr = datum.strftime("%Y")
-            save_path = f"Rechnung{tag}{monat}{jahr}.docx"
         
         # Save the document
-        doc.save(save_path.replace('/', ''))
+        doc.save(save_path)
     
 
 class NeuerKundeDialog(tk.Toplevel):
@@ -186,7 +178,6 @@ class EingabeDialog(tk.Toplevel):
         )
 
         # Replace text in .docx
-        invoice_number = self.new_labels['Rechnungsnummer'].get()
         Textersetzung.replace_text(all_data, save_path=invoice_file_path, template_path=template_file_path)
 
         self.destroy()
