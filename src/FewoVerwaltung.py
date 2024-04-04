@@ -1,25 +1,24 @@
 # TODO:
 # Daten müssen richtig angezeigt werden
-# 1.9.2023 sollte zu 01.09.2023
-#
+# 1.9.2023 sollte 01.09.2023 sein
+# 
 # Firmen-Adressen möglich machen
-#
+# 
 # als PDF und nicht als docx
-#
-# nachschauen ob Netto & Steuer richtig berechnet werden
+# 
+# nachschauen ob Netto & Steuer richtig berechnet wird
 #
 # mit/ ohne Frühstück 10€/Frühstück
 #
-# R.-Nr. 2023 028, Fewo Simone, 01.07-01.08.2023, Fam. Queck
-
+#
+#
+# Steuern und Preise selbst anpassen
 
 import tkinter as tk
 from tkinter import filedialog
-import csv
 import datetime
 from docx import Document
 import sqlite3
-
 
 class Textersetzung:
     def replace_text(replacements, save_path, template_path="Rechnungsvorlage.docx"):
@@ -179,12 +178,12 @@ class EingabeDialog(tk.Toplevel):
             tk.Entry(self, textvariable=v, width=30).grid(row=j, column=1, sticky="ew")
             self.grid_rowconfigure(j, weight=1)  # make the row expandable
 
-            tk.Button(self, text="Rechnung erstellen", command=self.invoice).grid(
-                row=j + 1, column=1, sticky="ew"
-            )
-            tk.Button(self, text="Abbrechen", command=self.destroy).grid(
-                row=j + 1, column=0, sticky="ew"
-            )
+        tk.Button(self, text="Rechnung erstellen", command=self.invoice).grid(
+            row=j + 1, column=1, sticky="ew"
+        )
+        tk.Button(self, text="Abbrechen", command=self.destroy).grid(
+            row=j + 1, column=0, sticky="ew"
+        )
 
         self.grid_columnconfigure(0, weight=1)  # make the first column expandable
         self.grid_columnconfigure(1, weight=1)  # make the second column expandable

@@ -1,14 +1,10 @@
-Kunden.csv
-neueRechnung.docx
-Rechnungsvorlage.docx
-src/Rechnungsvorlage.docx
-neu_Rechnungsvorlage.docx
-~$chnungsvorlage.docx
+*.csv
+*.docx
+*.pdf
+*.db
 
 build
 dist
-
-*.db
 
 TEMPLATES_DIRECTORY/
 
@@ -24,3 +20,5 @@ build.gradle
 .gradle/buildOutputCleanup/cache.properties
 *.spec
 
+FewoVerwaltung.py
+test.*
