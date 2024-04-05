@@ -29,7 +29,7 @@ class Textersetzung:
             for run in p.runs:
                 for old_text, new_text in replacements.items():
                     if old_text in run.text:
-                        run.text = run.text.replace(old_text, new_text)
+                        run.text = run.text.replace(str(old_text), str(new_text))
 
         # Go through each table in the document
         for table in doc.tables:
@@ -39,7 +39,7 @@ class Textersetzung:
                         for run in paragraph.runs:
                             for old_text, new_text in replacements.items():
                                 if old_text in run.text:
-                                    run.text = run.text.replace(old_text, new_text)
+                                    run.text = run.text.replace(str(old_text), str(new_text))
 
         # Save the document
         doc.save(save_path)
@@ -193,11 +193,19 @@ class EingabeDialog(tk.Toplevel):
         date_format = "%d.%m.%Y"
         tax_percent = 7
 
-        # Convert the dates to datetime objects
+        self.new_labels["Rechnungsnummer"] = self.new_labels["Rechnungsnummer"].get()
+
+        # Convert the dates to datetime objects and safe them in the right format
+        datum = datetime.datetime.strptime(
+            self.new_labels["Datum"].get(), date_format
+        )
+        self.new_labels["Datum"] = datum.strftime(date_format)
+
         anreisedatum = datetime.datetime.strptime(
             self.new_labels["Anreisedatum"].get(), date_format
         )
         self.new_labels["Anreisedatum"] = anreisedatum.strftime(date_format)
+
         abreisedatum = datetime.datetime.strptime(
             self.new_labels["Abreisedatum"].get(), date_format
         )
@@ -215,7 +223,7 @@ class EingabeDialog(tk.Toplevel):
         # Merge selected data and new data
         all_data = {
             **self.parent.selected_data,
-            **{k: v.get() for k, v in self.new_labels.items()},
+            **{k: v for k, v in self.new_labels.items()},
             "AnzahlDerÜbernachtungen": str(number_of_nights),
             "PpN": f"{price_per_night:.2f}".replace(".", ","),
             "NdFeWo": self.new_labels["Name der Ferienwohnung"].get(),
