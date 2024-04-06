@@ -1,7 +1,4 @@
-# TODO:
-# Daten müssen richtig angezeigt werden
-# 1.9.2023 sollte 01.09.2023 sein
-# 
+# TODO: 
 # Firmen-Adressen möglich machen
 # 
 # als PDF und nicht als docx
