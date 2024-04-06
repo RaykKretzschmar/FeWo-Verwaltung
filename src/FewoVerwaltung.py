@@ -58,6 +58,11 @@ class NeuerKundeDialog(tk.Toplevel):
                              Strasse text, Hausnummer text, Kundennummer text)"""
         )
 
+        # Choose for company or private address
+        self.kundentyp = tk.StringVar(value="Privat")
+        tk.Radiobutton(self, text="Privat", variable=self.kundentyp, value="Privat", command=self.update_fields).grid(row=0, column=0)
+        tk.Radiobutton(self, text="Firma", variable=self.kundentyp, value="Firma", command=self.update_fields).grid(row=0, column=1)
+
         self.labels = {
             "Anrede": tk.StringVar(),
             "Vorname": tk.StringVar(),
@@ -69,16 +74,45 @@ class NeuerKundeDialog(tk.Toplevel):
             "Kundennummer": tk.StringVar(value=self.generate_kundennummer()),
         }
 
-        for i, (k, v) in enumerate(self.labels.items()):
-            tk.Label(self, text=f"{k} : ", anchor="e").grid(row=i, column=0, sticky="e")
-            tk.Entry(self, textvariable=v, width=30).grid(row=i, column=1, sticky="ew")
 
-        tk.Button(self, text="Speichern", command=self.save).grid(row=i + 1, column=0)
+        self.fields = {}
+
+        for i, (k, v) in enumerate(self.labels.items()):
+            label_widget = tk.Label(self, text=f"{k} : ", anchor="e")
+            entry_widget = tk.Entry(self, textvariable=v, width=30)
+
+            self.fields[k] = {"label": label_widget, "entry": entry_widget}
+
+            # show all at first
+            label_widget.grid(row=i+1, column=0, sticky="e")
+            entry_widget.grid(row=i+1, column=1, sticky="ew")
+
+        # save and abort buttons
+        tk.Button(self, text="Speichern", command=self.save).grid(
+            row=i + 2, column=0)
         tk.Button(self, text="Abbrechen", command=self.destroy).grid(
-            row=i + 1, column=1
+            row=i + 2, column=1
         )
 
         self.grid_columnconfigure(1, weight=1)  # make the second column expandable
+
+    def update_fields(self):
+        kundentyp = self.kundentyp.get()
+        start_row = 2
+        for i, (label, entry) in enumerate(self.fields.items(), start=start_row):
+            if kundentyp == "Firma" and label in ["Anrede", "Vorname"]:
+                entry["label"].grid_remove()
+                entry["entry"].grid_remove()
+            elif kundentyp == "Firma" and label == "Nachname":
+                entry["label"].config(text="Firmenname : ")
+            else:
+                entry["label"].grid(row=i, column=0, sticky="e")
+                entry["entry"].grid(row=i, column=1, sticky="ew")
+
+        # update grid layout for buttons
+        self.fields[list(self.fields.keys())[-1]]["entry"].grid(row=len(self.fields) + 1, column=1, sticky="ew")
+        self.children["!button"].grid(row=len(self.fields) + 2, column=0)
+        self.children["!button2"].grid(row=len(self.fields) + 2, column=1)
 
     def save(self):
         data = [v.get() for v in self.labels.values()]
