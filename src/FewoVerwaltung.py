@@ -100,10 +100,10 @@ class NeuerKundeDialog(tk.Toplevel):
         kundentyp = self.kundentyp.get()
         start_row = 2
         for i, (label, entry) in enumerate(self.fields.items(), start=start_row):
-            if kundentyp == "Firma" and label in ["Anrede", "Vorname"]:
+            if kundentyp == "Firma" and label in ["Anrede", "Nachname"]:
                 entry["label"].grid_remove()
                 entry["entry"].grid_remove()
-            elif kundentyp == "Firma" and label == "Nachname":
+            elif kundentyp == "Firma" and label == "Vorname":
                 entry["label"].config(text="Firmenname : ")
             else:
                 entry["label"].grid(row=i, column=0, sticky="e")
@@ -224,7 +224,9 @@ class EingabeDialog(tk.Toplevel):
         date_format = "%d.%m.%Y"
         tax_percent = 7
 
-        self.new_labels["Rechnungsnummer"] = self.new_labels["Rechnungsnummer"].get()
+        # check if self.new_labels["Rechnungsnummer"] has already type str
+        if self.new_labels["Rechnungsnummer"] is not str:
+            self.new_labels["Rechnungsnummer"] = self.new_labels["Rechnungsnummer"].get()
 
         # Convert the dates to datetime objects and safe them in the right format
         datum = datetime.datetime.strptime(
