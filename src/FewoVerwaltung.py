@@ -13,6 +13,7 @@ import tkinter as tk
 from tkinter import filedialog
 import datetime
 from docx import Document
+from docx2pdf import convert
 import sqlite3
 
 class Textersetzung:
@@ -284,13 +285,18 @@ class EingabeDialog(tk.Toplevel):
         invoice_file_path = filedialog.asksaveasfilename(
             title="Wählen Sie, wo die Rechnung gespeichert werden soll",
             filetypes=(("Word-Dokumente", "*.docx"), ("Alle Dateien", "*.*")),
-            defaultextension=".docx",
+            # prefill the filename with the invoice number
+            initialfile=f"RNr_{self.new_labels['Rechnungsnummer']}",
         )
 
         # Replace text in .docx
         Textersetzung.replace_text(
             all_data, save_path=invoice_file_path, template_path=template_file_path
         )
+
+        # Convert .docx to .pdf
+        if invoice_file_path:
+            convert(invoice_file_path)
 
         self.destroy()
 

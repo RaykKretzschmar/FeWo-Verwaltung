@@ -10,8 +10,8 @@ The application provides functionality to add new customers, choose an existing 
 Before running the application, make sure you have the following:
 
 1. Python 3.6 or newer
-2. python-docx library installed: This can be installed using pip:
->pip install python-docx
+2. requirements installed: This can be installed using pip:
+>pip install -r requirements.txt
 
 
 
@@ -24,7 +24,7 @@ Before running the application, make sure you have the following:
 
 4. __Automatic Price Calculation__: The application automatically calculates the total price, VAT, and net amount based on the number of nights and price per night.
 
-5. __Custom Invoice Template__: You can use a custom Word document as an invoice template. The application will replace placeholders in the document with the actual data.
+5. __Custom Invoice Template__: You can use a custom .docx file as an invoice template. The application will replace placeholders in the document with the actual data.
 
 
 
@@ -38,9 +38,9 @@ Before running the application, make sure you have the following:
 
 4. You will be asked to provide a Word document as a template for the invoice. Make sure the document contains placeholders that match the customer and invoice data.
 
-5. The application will generate a Word document with the replaced text and save it in your chosen location.
+5. The application will generate a .docx and a .pdf document with the replaced text and save it in your chosen location.
 
 
 
 ## Note
-This application only supports .docx Word documents. The Word document should contain placeholders in the form of your labels. For example, if you have a label "Anrede", your Word document should contain a placeholder "Anrede" where you want this information to be inserted.
+This application only supports .docx documents as templates. The .docx file should contain placeholders in the form of your labels. For example, if you have a label "Anrede", your Word document should contain a placeholder "Anrede" where you want this information to be inserted.
