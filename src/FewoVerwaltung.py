@@ -1,6 +1,4 @@
-# TODO:
-# als PDF und nicht als docx
-# 
+# TODO: 
 # nachschauen ob Netto & Steuer richtig berechnet wird
 #
 # mit/ ohne Frühstück 10€/Frühstück
