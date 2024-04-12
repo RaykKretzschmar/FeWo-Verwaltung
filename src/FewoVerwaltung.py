@@ -1,6 +1,4 @@
-# TODO: 
-# Firmen-Adressen möglich machen
-# 
+# TODO:
 # als PDF und nicht als docx
 # 
 # nachschauen ob Netto & Steuer richtig berechnet wird
