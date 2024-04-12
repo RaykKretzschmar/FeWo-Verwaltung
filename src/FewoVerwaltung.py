@@ -98,19 +98,29 @@ class NeuerKundeDialog(tk.Toplevel):
 
     def update_fields(self):
         kundentyp = self.kundentyp.get()
-        start_row = 2
+        start_row = 1
+
+        # clear entries for Anrede, Vorname, Nachname
+        self.labels["Anrede"].set("")
+        self.labels["Vorname"].set("")
+        self.labels["Nachname"].set("")
+
         for i, (label, entry) in enumerate(self.fields.items(), start=start_row):
             if kundentyp == "Firma" and label in ["Anrede", "Nachname"]:
                 entry["label"].grid_remove()
                 entry["entry"].grid_remove()
-            elif kundentyp == "Firma" and label == "Vorname":
-                entry["label"].config(text="Firmenname : ")
+            elif label == "Vorname":
+                # use field "Vorname" for "Firmenname" if kundentyp is "Firma"
+                if kundentyp == "Firma":
+                    entry["label"].config(text="Firmenname : ")
+                else:
+                    entry["label"].config(text="Vorname : ")
             else:
                 entry["label"].grid(row=i, column=0, sticky="e")
                 entry["entry"].grid(row=i, column=1, sticky="ew")
 
         # update grid layout for buttons
-        self.fields[list(self.fields.keys())[-1]]["entry"].grid(row=len(self.fields) + 1, column=1, sticky="ew")
+        # self.fields[list(self.fields.keys())[-1]]["entry"].grid(row=len(self.fields) + 1, column=1, sticky="ew")
         self.children["!button"].grid(row=len(self.fields) + 2, column=0)
         self.children["!button2"].grid(row=len(self.fields) + 2, column=1)
 
