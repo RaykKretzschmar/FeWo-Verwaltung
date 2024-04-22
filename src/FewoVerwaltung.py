@@ -1,6 +1,4 @@
-# TODO: 
-# nachschauen ob Netto & Steuer richtig berechnet wird
-#
+# TODO:
 # mit/ ohne Frühstück 10€/Frühstück
 #
 #
@@ -232,24 +230,39 @@ class EingabeDialog(tk.Toplevel):
         tax_percent = 7
 
         # check if self.new_labels["Rechnungsnummer"] has already type str
-        if self.new_labels["Rechnungsnummer"] is not str:
+        if type(self.new_labels["Rechnungsnummer"]) is not str:
             self.new_labels["Rechnungsnummer"] = self.new_labels["Rechnungsnummer"].get()
 
         # Convert the dates to datetime objects and safe them in the right format
-        datum = datetime.datetime.strptime(
-            self.new_labels["Datum"].get(), date_format
-        )
-        self.new_labels["Datum"] = datum.strftime(date_format)
+        if type(self.new_labels["Datum"]) is not str:
+            datum = datetime.datetime.strptime(
+                self.new_labels["Datum"].get(), date_format
+            )
+            self.new_labels["Datum"] = datum.strftime(date_format)
+        else:
+            datum = datetime.datetime.strptime(
+                self.new_labels["Datum"], date_format
+            )
 
-        anreisedatum = datetime.datetime.strptime(
-            self.new_labels["Anreisedatum"].get(), date_format
-        )
-        self.new_labels["Anreisedatum"] = anreisedatum.strftime(date_format)
+        if type(self.new_labels["Anreisedatum"]) is not str:
+            anreisedatum = datetime.datetime.strptime(
+                self.new_labels["Anreisedatum"].get(), date_format
+            )
+            self.new_labels["Anreisedatum"] = anreisedatum.strftime(date_format)
+        else:
+            anreisedatum = datetime.datetime.strptime(
+                self.new_labels["Anreisedatum"], date_format
+            )
 
-        abreisedatum = datetime.datetime.strptime(
-            self.new_labels["Abreisedatum"].get(), date_format
-        )
-        self.new_labels["Abreisedatum"] = abreisedatum.strftime(date_format)
+        if type(self.new_labels["Abreisedatum"]) is not str:
+            abreisedatum = datetime.datetime.strptime(
+                self.new_labels["Abreisedatum"].get(), date_format
+            )
+            self.new_labels["Abreisedatum"] = abreisedatum.strftime(date_format)
+        else:
+            abreisedatum = datetime.datetime.strptime(
+                self.new_labels["Abreisedatum"], date_format
+            )
 
         number_of_nights = (abreisedatum - anreisedatum).days
         price_per_night = float(
