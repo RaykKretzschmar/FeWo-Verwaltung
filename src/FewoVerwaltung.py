@@ -3,7 +3,7 @@
 #
 #
 #
-# Steuern und Preise selbst anpassen
+# Preise selbst anpassen
 
 import tkinter as tk
 from tkinter import filedialog
@@ -214,11 +214,15 @@ class EingabeDialog(tk.Toplevel):
             tk.Entry(self, textvariable=v, width=30).grid(row=j, column=1, sticky="ew")
             self.grid_rowconfigure(j, weight=1)  # make the row expandable
 
+        # check button for breakfast
+        self.include_breakfast = tk.BooleanVar(value=False)
+        tk.Checkbutton(self, text="Frühstück", variable=self.include_breakfast).grid(row=j + 1, column=0, sticky="w")
+
         tk.Button(self, text="Rechnung erstellen", command=self.invoice).grid(
-            row=j + 1, column=1, sticky="ew"
+            row=j + 2, column=1, sticky="ew"
         )
         tk.Button(self, text="Abbrechen", command=self.destroy).grid(
-            row=j + 1, column=0, sticky="ew"
+            row=j + 2, column=0, sticky="ew"
         )
 
         self.grid_columnconfigure(0, weight=1)  # make the first column expandable
@@ -285,6 +289,18 @@ class EingabeDialog(tk.Toplevel):
             "MwstBetrag": f"{tax_amount:.2f}".replace(".", ","),
             "NettoBetrag": f"{net_amount:.2f}".replace(".", ","),
         }
+
+        if self.include_breakfast.get():
+            frst = 10
+            all_data["AnzahlFrst"] = int(number_of_nights)
+            all_data["Frst_ges"] = f"{(frst*number_of_nights):.2f}".replace(".", ",")
+            all_data["Frst"] = f"{frst:.2f}".replace(".", ",")
+            total_price += frst * number_of_nights
+            net_amount = total_price * 100 / (100 + 19) # 19% MwSt
+            tax_amount = total_price - net_amount
+            all_data["GesamtBetrag"] = f"{total_price:.2f}".replace(".", ",")
+            all_data["MwstBetrag"] = f"{tax_amount:.2f}".replace(".", ",")
+            all_data["NettoBetrag"] = f"{net_amount:.2f}".replace(".", ",")
 
         # Open a dialog to select the invoice template
         template_file_path = filedialog.askopenfilename(
