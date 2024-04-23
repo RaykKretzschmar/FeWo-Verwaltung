@@ -1,5 +1,5 @@
 # TODO:
-# mit/ ohne Frühstück 10€/Frühstück
+# show text field for breakfast entry only if box is checked
 #
 #
 #
@@ -216,7 +216,8 @@ class EingabeDialog(tk.Toplevel):
 
         # check button for breakfast
         self.include_breakfast = tk.BooleanVar(value=False)
-        tk.Checkbutton(self, text="Frühstück", variable=self.include_breakfast).grid(row=j + 1, column=0, sticky="w")
+        self.number_frst = tk.StringVar()
+        tk.Checkbutton(self, text="Frühstück", variable=self.include_breakfast, command=tk.Entry(self, textvariable=self.number_frst, width=30).grid(row=j + 1, column=1, sticky="ew")).grid(row=j + 1, column=0, sticky="w")
 
         tk.Button(self, text="Rechnung erstellen", command=self.invoice).grid(
             row=j + 2, column=1, sticky="ew"
@@ -227,6 +228,7 @@ class EingabeDialog(tk.Toplevel):
 
         self.grid_columnconfigure(0, weight=1)  # make the first column expandable
         self.grid_columnconfigure(1, weight=1)  # make the second column expandable
+
 
     def invoice(self):
         # Format for date input
@@ -291,11 +293,12 @@ class EingabeDialog(tk.Toplevel):
         }
 
         if self.include_breakfast.get():
-            frst = 10
-            all_data["AnzahlFrst"] = int(number_of_nights)
-            all_data["Frst_ges"] = f"{(frst*number_of_nights):.2f}".replace(".", ",")
+            frst = 10.00
+            number_frst = float(self.number_frst.get().replace(",", "."))
+            all_data["AnzahlFrst"] = int(number_frst)
+            all_data["Frst_ges"] = f"{(frst*number_frst):.2f}".replace(".", ",")
             all_data["Frst"] = f"{frst:.2f}".replace(".", ",")
-            total_price += frst * number_of_nights
+            total_price += frst * number_frst
             net_amount = total_price * 100 / (100 + 19) # 19% MwSt
             tax_amount = total_price - net_amount
             all_data["GesamtBetrag"] = f"{total_price:.2f}".replace(".", ",")
