@@ -1,6 +1,8 @@
 # TODO:
+# Firmen-Adressen möglich machen
+#
 # als PDF und nicht als docx
-# 
+#
 # nachschauen ob Netto & Steuer richtig berechnet wird
 #
 # mit/ ohne Frühstück 10€/Frühstück
@@ -14,6 +16,7 @@ from tkinter import filedialog
 import datetime
 from docx import Document
 import sqlite3
+
 
 class Textersetzung:
     def replace_text(replacements, save_path, template_path="Rechnungsvorlage.docx"):
@@ -34,7 +37,9 @@ class Textersetzung:
                         for run in paragraph.runs:
                             for old_text, new_text in replacements.items():
                                 if old_text in run.text:
-                                    run.text = run.text.replace(str(old_text), str(new_text))
+                                    run.text = run.text.replace(
+                                        str(old_text), str(new_text)
+                                    )
 
         # Save the document
         doc.save(save_path)
@@ -58,8 +63,20 @@ class NeuerKundeDialog(tk.Toplevel):
 
         # Choose for company or private address
         self.kundentyp = tk.StringVar(value="Privat")
-        tk.Radiobutton(self, text="Privat", variable=self.kundentyp, value="Privat", command=self.update_fields).grid(row=0, column=0)
-        tk.Radiobutton(self, text="Firma", variable=self.kundentyp, value="Firma", command=self.update_fields).grid(row=0, column=1)
+        tk.Radiobutton(
+            self,
+            text="Privat",
+            variable=self.kundentyp,
+            value="Privat",
+            command=self.update_fields,
+        ).grid(row=0, column=0)
+        tk.Radiobutton(
+            self,
+            text="Firma",
+            variable=self.kundentyp,
+            value="Firma",
+            command=self.update_fields,
+        ).grid(row=0, column=1)
 
         self.labels = {
             "Anrede": tk.StringVar(),
@@ -72,7 +89,6 @@ class NeuerKundeDialog(tk.Toplevel):
             "Kundennummer": tk.StringVar(value=self.generate_kundennummer()),
         }
 
-
         self.fields = {}
 
         for i, (k, v) in enumerate(self.labels.items()):
@@ -82,12 +98,11 @@ class NeuerKundeDialog(tk.Toplevel):
             self.fields[k] = {"label": label_widget, "entry": entry_widget}
 
             # show all at first
-            label_widget.grid(row=i+1, column=0, sticky="e")
-            entry_widget.grid(row=i+1, column=1, sticky="ew")
+            label_widget.grid(row=i + 1, column=0, sticky="e")
+            entry_widget.grid(row=i + 1, column=1, sticky="ew")
 
         # save and abort buttons
-        tk.Button(self, text="Speichern", command=self.save).grid(
-            row=i + 2, column=0)
+        tk.Button(self, text="Speichern", command=self.save).grid(row=i + 2, column=0)
         tk.Button(self, text="Abbrechen", command=self.destroy).grid(
             row=i + 2, column=1
         )
@@ -118,7 +133,9 @@ class NeuerKundeDialog(tk.Toplevel):
                 entry["entry"].grid(row=i, column=1, sticky="ew")
 
         # update grid layout for buttons
-        # self.fields[list(self.fields.keys())[-1]]["entry"].grid(row=len(self.fields) + 1, column=1, sticky="ew")
+        self.fields[list(self.fields.keys())[-1]]["entry"].grid(
+            row=len(self.fields) + 1, column=1, sticky="ew"
+        )
         self.children["!button"].grid(row=len(self.fields) + 2, column=0)
         self.children["!button2"].grid(row=len(self.fields) + 2, column=1)
 
@@ -234,12 +251,12 @@ class EingabeDialog(tk.Toplevel):
 
         # check if self.new_labels["Rechnungsnummer"] has already type str
         if self.new_labels["Rechnungsnummer"] is not str:
-            self.new_labels["Rechnungsnummer"] = self.new_labels["Rechnungsnummer"].get()
+            self.new_labels["Rechnungsnummer"] = self.new_labels[
+                "Rechnungsnummer"
+            ].get()
 
         # Convert the dates to datetime objects and safe them in the right format
-        datum = datetime.datetime.strptime(
-            self.new_labels["Datum"].get(), date_format
-        )
+        datum = datetime.datetime.strptime(self.new_labels["Datum"].get(), date_format)
         self.new_labels["Datum"] = datum.strftime(date_format)
 
         anreisedatum = datetime.datetime.strptime(
