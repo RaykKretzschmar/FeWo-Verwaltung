@@ -15,6 +15,7 @@ __pycache__/
 legacy_java/
 .gradle/
 .gradle
+.venv
 build.gradle
 .gradle/buildOutputCleanup/buildOutputCleanup.lock
 .gradle/buildOutputCleanup/cache.properties
