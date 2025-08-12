@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Customers</h1>
+<table class="table">
+    <tr>
+        <th>Name</th>
+        <th>City</th>
+        <th>Actions</th>
+    </tr>
+    {% for customer in customers %}
+    <tr>
+        <td>{{ customer }}</td>
+        <td>{{ customer.city }}</td>
+        <td>
+            <a href="{% url 'invoice_create_for_customer' customer.id %}" class="btn btn-primary btn-sm">Create
+                Invoice</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

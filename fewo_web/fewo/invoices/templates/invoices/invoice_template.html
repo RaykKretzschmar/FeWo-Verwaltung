@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Invoice {{ invoice.invoice_number }}</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            font-size: 12px;
+        }
+
+        .right {
+            text-align: right;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th,
+        td {
+            padding: 6px;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Invoice {{ invoice.invoice_number }}</h2>
+    <p>Date: {{ invoice.date }}</p>
+    <p>Customer: {{ invoice.customer }}</p>
+
+    <h3>Stay</h3>
+    <p>Apartment: {{ invoice.apartment_name }}</p>
+    <p>Arrival: {{ invoice.arrival_date }} — Departure: {{ invoice.departure_date }}</p>
+    <p>Nights: {{ invoice.nights }}</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th class="right">Unit</th>
+                <th class="right">Quantity</th>
+                <th class="right">Amount (€)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Übernachtung</td>
+                <td class="right">{{ invoice.price_per_night }}</td>
+                <td class="right">{{ invoice.nights }}</td>
+                <td class="right">{{ invoice.lodging_total }}</td>
+            </tr>
+            {% if invoice.include_breakfast %}
+            <tr>
+                <td>Frühstück</td>
+                <td class="right">{{ invoice.breakfast_price }}</td>
+                <td class="right">{{ invoice.nights }}</td>
+                <td class="right">{{ invoice.breakfast_total }}</td>
+            </tr>
+            {% endif %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="3" class="right">Netto</th>
+                <th class="right">{{ invoice.net_amount }}</th>
+            </tr>
+            <tr>
+                <th colspan="3" class="right">MwSt ({{ invoice.tax_percent }}%)</th>
+                <th class="right">{{ invoice.tax_amount }}</th>
+            </tr>
+            <tr>
+                <th colspan="3" class="right">Gesamt</th>
+                <th class="right">{{ invoice.total_price }}</th>
+            </tr>
+        </tfoot>
+    </table>
+</body>
+
+</html>
