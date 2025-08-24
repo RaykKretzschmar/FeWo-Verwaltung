@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<script src="{% static 'js/scripts.js' %}" defer></script>
+
+{% block content %}
+<div class="hero">
+    <h1>Simplify Your Apartment Rental Business</h1>
+    <p>Manage customers, create invoices, and streamline your operations effortlessly.</p>
+    <a href="/signup" class="cta-button">Get Started Now</a>
+</div>
+
+<div class="features">
+    <h2>Features</h2>
+    <ul>
+        <li>Customer Management</li>
+        <li>Invoice Creation</li>
+        <li>Easy-to-Use Dashboard</li>
+        <li>Secure Data Handling</li>
+    </ul>
+</div>
+
+<div class="how-it-works">
+    <h2>How It Works</h2>
+    <ol>
+        <li>Add your properties and customers.</li>
+        <li>Generate invoices in seconds.</li>
+        <li>Track your business performance.</li>
+    </ol>
+</div>
+
+<div class="testimonials">
+    <h2>What Our Users Say</h2>
+    <blockquote>
+        <p>"This tool has transformed the way I manage my rental business!"</p>
+        <cite>- Happy User</cite>
+    </blockquote>
+</div>
+
+<div class="pricing">
+    <h2>Pricing</h2>
+    <p>Simple and affordable plans for every business.</p>
+</div>
+{% endblock %}
