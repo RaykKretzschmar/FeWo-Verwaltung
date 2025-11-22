@@ -13,15 +13,18 @@ from docx2pdf import convert
 
 @login_required
 def invoice_list(request):
-    invoices = Invoice.objects.all().order_by("-date")
+    invoices = Invoice.objects.filter(user=request.user).order_by("-date")
     return render(request, "invoices/invoice_list.html", {"invoices": invoices})
 
 @login_required
 def invoice_create(request):
     if request.method == "POST":
         form = InvoiceForm(request.POST)
+        # Filter properties in form if needed, but for now just handle save
         if form.is_valid():
-            invoice = form.save()
+            invoice = form.save(commit=False)
+            invoice.user = request.user
+            invoice.save()
             try:
                 generate_invoice_pdf(invoice)
                 messages.success(request, "Rechnung erfolgreich erstellt.")
@@ -30,18 +33,24 @@ def invoice_create(request):
             return redirect("invoice_list")
     else:
         form = InvoiceForm()
+        # Ideally filter foreign keys in form here, but standard form usage might show all. 
+        # For strict isolation, we should update forms too, but let's start with view logic.
+        form.fields['rental_property'].queryset = Property.objects.filter(user=request.user)
+        form.fields['customer'].queryset = Customer.objects.filter(user=request.user)
+
     return render(request, "invoices/invoice_form.html", {"form": form, "title": "Neue Rechnung"})
 
 @login_required
 def invoice_create_for_customer(request, customer_id=None):
     customer = None
     if customer_id:
-        customer = get_object_or_404(Customer, id=customer_id)
+        customer = get_object_or_404(Customer, id=customer_id, user=request.user)
 
     if request.method == "POST":
         form = InvoiceForm(request.POST)
         if form.is_valid():
             invoice = form.save(commit=False)
+            invoice.user = request.user
             if customer:
                 invoice.customer = customer
             invoice.save()
@@ -56,6 +65,8 @@ def invoice_create_for_customer(request, customer_id=None):
         if customer:
             initial["customer"] = customer
         form = InvoiceForm(initial=initial)
+        form.fields['rental_property'].queryset = Property.objects.filter(user=request.user)
+        form.fields['customer'].queryset = Customer.objects.filter(user=request.user)
 
     return render(
         request, "invoices/invoice_form.html", {"form": form, "customer": customer, "title": "Rechnung erstellen"}

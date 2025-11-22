@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def customer_list(request):
-    customers = Customer.objects.all()
+    customers = Customer.objects.filter(user=request.user)
     return render(request, "customers/customer_list.html", {"customers": customers})
 
 @login_required
@@ -15,7 +15,9 @@ def customer_create(request):
     if request.method == "POST":
         form = CustomerForm(request.POST)
         if form.is_valid():
-            form.save()
+            customer = form.save(commit=False)
+            customer.user = request.user
+            customer.save()
             messages.success(request, "Kunde erfolgreich erstellt.")
             return redirect("customer_list")
     else:
@@ -24,7 +26,7 @@ def customer_create(request):
 
 @login_required
 def customer_update(request, pk):
-    customer = get_object_or_404(Customer, pk=pk)
+    customer = get_object_or_404(Customer, pk=pk, user=request.user)
     if request.method == "POST":
         form = CustomerForm(request.POST, instance=customer)
         if form.is_valid():
@@ -37,7 +39,7 @@ def customer_update(request, pk):
 
 @login_required
 def customer_delete(request, pk):
-    customer = get_object_or_404(Customer, pk=pk)
+    customer = get_object_or_404(Customer, pk=pk, user=request.user)
     if request.method == "POST":
         customer.delete()
         messages.success(request, "Kunde erfolgreich gelöscht.")

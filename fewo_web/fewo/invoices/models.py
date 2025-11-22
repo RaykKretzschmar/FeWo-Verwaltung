@@ -7,8 +7,10 @@ TWOPLACES = Decimal("0.01")
 
 
 from properties.models import Property
+from django.contrib.auth.models import User
 
 class Invoice(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     date = models.DateField(default=date.today)
     invoice_number = models.CharField(max_length=20, unique=True)

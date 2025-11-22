@@ -1,6 +1,8 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Property(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     name = models.CharField(max_length=100, verbose_name="Name der Ferienwohnung")
     description = models.TextField(blank=True, verbose_name="Beschreibung")
     price_per_night = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Preis pro Nacht")
