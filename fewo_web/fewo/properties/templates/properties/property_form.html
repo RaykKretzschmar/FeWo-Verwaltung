@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - FeWo Verwaltung{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="{% url 'property_list' %}" class="btn btn-outline">← Zurück</a>
+</div>
+
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <h1 class="text-xl font-bold mb-4">{{ title }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group">
+            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+            <div style="color: var(--danger); font-size: 0.875rem; margin-top: 0.25rem;">
+                {{ field.errors }}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        <div class="flex justify-between" style="margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary">Speichern</button>
+            <a href="{% url 'property_list' %}" class="btn btn-outline">Abbrechen</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

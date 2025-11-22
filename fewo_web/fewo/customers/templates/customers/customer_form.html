@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - FeWo Verwaltung{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="{% url 'customer_list' %}" class="btn btn-outline">← Zurück</a>
+</div>
+
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <h1 class="text-xl font-bold mb-4">{{ title }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group">
+            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+            <div style="color: var(--danger); font-size: 0.875rem; margin-top: 0.25rem;">
+                {{ field.errors }}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        <div class="flex justify-between" style="margin-top: 2rem;">
+            <button type="submit" class="btn btn-primary">Speichern</button>
+            <a href="{% url 'customer_list' %}" class="btn btn-outline">Abbrechen</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const typeSelect = document.getElementById('id_customer_type');
+        const companyRow = document.getElementById('id_company_name').closest('.form-group');
+        const salutationRow = document.getElementById('id_salutation').closest('.form-group');
+        const firstNameRow = document.getElementById('id_first_name').closest('.form-group');
+        const lastNameRow = document.getElementById('id_last_name').closest('.form-group');
+
+        function updateFields() {
+            if (typeSelect.value === 'Firma') {
+                companyRow.style.display = 'block';
+                salutationRow.style.display = 'none';
+                // We keep first/last name as contact person, or hide if strictly following Tkinter
+                // User said "Custom form should change". 
+                // Let's hide Salutation for Firma. 
+                // And maybe change label of First Name to "Ansprechpartner Vorname"?
+            } else {
+                companyRow.style.display = 'none';
+                salutationRow.style.display = 'block';
+            }
+        }
+
+        typeSelect.addEventListener('change', updateFields);
+        updateFields(); // Initial call
+    });
+</script>
+{% endblock %}

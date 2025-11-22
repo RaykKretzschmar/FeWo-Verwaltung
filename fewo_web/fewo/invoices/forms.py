@@ -11,7 +11,7 @@ class InvoiceForm(forms.ModelForm):
             "invoice_number",
             "arrival_date",
             "departure_date",
-            "apartment_name",
+            "rental_property",
             "price_per_night",
             "include_breakfast",
             "breakfast_price",

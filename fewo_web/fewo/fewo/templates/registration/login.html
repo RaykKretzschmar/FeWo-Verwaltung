@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Anmelden - FeWo Verwaltung{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 400px; margin: 2rem auto;">
+    <h1 class="text-xl font-bold mb-4 text-center">Anmelden</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label class="form-label" for="id_username">Benutzername</label>
+            <input type="text" name="username" autofocus autocapitalize="none" autocomplete="username" maxlength="150"
+                required id="id_username" class="form-control">
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="id_password">Passwort</label>
+            <input type="password" name="password" autocomplete="current-password" required id="id_password"
+                class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Anmelden</button>
+    </form>
+    <div class="text-center mt-4">
+        <p>Noch kein Konto? <a href="{% url 'signup' %}" style="color: var(--primary);">Registrieren</a></p>
+    </div>
+</div>
+{% endblock %}

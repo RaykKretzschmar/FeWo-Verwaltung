@@ -24,6 +24,11 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("customers/", include("customers.urls")),
     path("invoices/", include("invoices.urls")),
+    path("properties/", include("properties.urls")),
+    path("accounts/", include("accounts.urls")),
     path("accounts/", include("django.contrib.auth.urls")),  # login/logout
-    path("", views.home, name="home"),
+    path("", views.landing, name="landing"),
+    path("dashboard/", views.home, name="home"),
+    path("impressum/", views.impressum, name="impressum"),
+    path("datenschutz/", views.datenschutz, name="datenschutz"),
 ]

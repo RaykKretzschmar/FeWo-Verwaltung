@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Ferienwohnung löschen - FeWo Verwaltung{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 500px; margin: 2rem auto; text-align: center;">
+    <h1 class="text-xl font-bold mb-4">Ferienwohnung löschen?</h1>
+    <p class="mb-4">Sind Sie sicher, dass Sie die Ferienwohnung <strong>{{ property.name }}</strong> löschen möchten?
+    </p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="flex justify-between">
+            <button type="submit" class="btn btn-primary" style="background-color: var(--danger);">Ja, löschen</button>
+            <a href="{% url 'property_list' %}" class="btn btn-outline">Abbrechen</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

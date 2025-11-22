@@ -1,21 +1,50 @@
 {% extends 'base.html' %}
+
+{% block title %}Kunden - FeWo Verwaltung{% endblock %}
+
 {% block content %}
-<h1>Customers</h1>
-<table class="table">
-    <tr>
-        <th>Name</th>
-        <th>City</th>
-        <th>Actions</th>
-    </tr>
-    {% for customer in customers %}
-    <tr>
-        <td>{{ customer }}</td>
-        <td>{{ customer.city }}</td>
-        <td>
-            <a href="{% url 'invoice_create_for_customer' customer.id %}" class="btn btn-primary btn-sm">Create
-                Invoice</a>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
+<div class="flex justify-between items-center mb-4">
+    <h1 class="text-xl font-bold">Kunden</h1>
+    <a href="{% url 'customer_create' %}" class="btn btn-primary">Neuer Kunde</a>
+</div>
+
+<div class="card">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Stadt</th>
+                <th>Kundennummer</th>
+                <th>Aktionen</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for customer in customers %}
+            <tr>
+                <td>
+                    {% if customer.customer_type == 'Firma' %}
+                    {{ customer.company_name }} (Firma)
+                    {% else %}
+                    {{ customer.first_name }} {{ customer.last_name }}
+                    {% endif %}
+                </td>
+                <td>{{ customer.city }}</td>
+                <td>{{ customer.customer_number }}</td>
+                <td>
+                    <a href="{% url 'customer_update' pk=customer.pk %}" class="btn btn-outline"
+                        style="padding: 0.25rem 0.5rem; font-size: 0.875rem;">Bearbeiten</a>
+                    <a href="{% url 'customer_delete' pk=customer.pk %}" class="btn btn-outline"
+                        style="color: var(--danger); border-color: var(--danger); padding: 0.25rem 0.5rem; font-size: 0.875rem;">Löschen</a>
+                    <a href="{% url 'invoice_create_for_customer' customer_id=customer.pk %}" class="btn btn-outline"
+                        style="color: var(--primary); border-color: var(--primary); padding: 0.25rem 0.5rem; font-size: 0.875rem;">Rechnung</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" style="text-align: center; color: var(--text-light);">Keine Kunden gefunden.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

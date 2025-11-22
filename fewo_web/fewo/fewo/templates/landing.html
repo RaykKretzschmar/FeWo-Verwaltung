@@ -1,0 +1,131 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FeWo Verwaltung - Willkommen</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --text: #0f172a;
+            --text-light: #64748b;
+            --background: #f8fafc;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            background-color: var(--background);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            font-size: 1.25rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 1.125rem;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        footer {
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-light);
+            border-top: 1px solid #e2e8f0;
+            background: white;
+        }
+
+        footer a {
+            color: var(--text-light);
+            text-decoration: none;
+            margin: 0 1rem;
+        }
+
+        footer a:hover {
+            color: var(--primary);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <a href="/" class="logo">FeWo Verwaltung</a>
+        <div style="display: flex; gap: 1rem;">
+            <a href="{% url 'login' %}" class="btn"
+                style="padding: 0.5rem 1rem; font-size: 1rem; background-color: transparent; color: var(--primary); border: 1px solid var(--primary);">Anmelden</a>
+            <a href="{% url 'signup' %}" class="btn" style="padding: 0.5rem 1rem; font-size: 1rem;">Registrieren</a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Einfache Verwaltung für Ihre Ferienwohnungen</h1>
+        <p>Organisieren Sie Buchungen, verwalten Sie Kunden und erstellen Sie Rechnungen im Handumdrehen. Die moderne
+            Lösung für Vermieter.</p>
+        <a href="{% url 'login' %}" class="btn">Jetzt starten</a>
+    </section>
+
+    <footer>
+        <a href="{% url 'impressum' %}">Impressum</a>
+        <a href="{% url 'datenschutz' %}">Datenschutz</a>
+        <span>&copy; 2025 FeWo Verwaltung</span>
+    </footer>
+</body>
+
+</html>

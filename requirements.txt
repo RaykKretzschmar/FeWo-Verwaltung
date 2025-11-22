@@ -1,5 +1,4 @@
 # requirements.txt
 python-docx
 docx2pdf
-
-# source /Users/rayk/FewoProject/FeWo-Verwaltung/.venv/bin/activate
+django

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Rechnungen - FeWo Verwaltung{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-4">
+    <h1 class="text-xl font-bold">Rechnungen</h1>
+    <a href="{% url 'invoice_create' %}" class="btn btn-primary">Neue Rechnung</a>
+</div>
+
+<div class="card">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Rechnungsnummer</th>
+                <th>Datum</th>
+                <th>Kunde</th>
+                <th>Betrag</th>
+                <th>PDF</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for invoice in invoices %}
+            <tr>
+                <td>{{ invoice.invoice_number }}</td>
+                <td>{{ invoice.date|date:"d.m.Y" }}</td>
+                <td>{{ invoice.customer }}</td>
+                <td>{{ invoice.total_price }} €</td>
+                <td>
+                    {% if invoice.pdf_file %}
+                    <a href="{{ invoice.pdf_file.url }}" class="btn btn-outline" target="_blank"
+                        style="padding: 0.25rem 0.5rem; font-size: 0.875rem;">Download</a>
+                    {% else %}
+                    <span style="color: var(--text-light);">Kein PDF</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center; color: var(--text-light);">Keine Rechnungen gefunden.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

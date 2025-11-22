@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Ferienwohnungen - FeWo Verwaltung{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-4">
+    <h1 class="text-xl font-bold">Ferienwohnungen</h1>
+    <a href="{% url 'property_create' %}" class="btn btn-primary">Neue Ferienwohnung</a>
+</div>
+
+<div class="card">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Preis pro Nacht</th>
+                <th>Aktionen</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for property in properties %}
+            <tr>
+                <td>
+                    <strong>{{ property.name }}</strong><br>
+                    <span style="color: var(--text-light); font-size: 0.875rem;">{{ property.description|linebreaksbr
+                        }}</span>
+                </td>
+                <td>{{ property.price_per_night }} €</td>
+                <td>
+                    <a href="{% url 'property_update' pk=property.pk %}" class="btn btn-outline"
+                        style="padding: 0.25rem 0.5rem; font-size: 0.875rem;">Bearbeiten</a>
+                    <a href="{% url 'property_delete' pk=property.pk %}" class="btn btn-outline"
+                        style="color: var(--danger); border-color: var(--danger); padding: 0.25rem 0.5rem; font-size: 0.875rem;">Löschen</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" style="text-align: center; color: var(--text-light);">Keine Ferienwohnungen gefunden.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

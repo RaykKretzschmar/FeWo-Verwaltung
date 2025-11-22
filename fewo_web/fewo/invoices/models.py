@@ -6,22 +6,25 @@ from datetime import date
 TWOPLACES = Decimal("0.01")
 
 
+from properties.models import Property
+
 class Invoice(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     date = models.DateField(default=date.today)
     invoice_number = models.CharField(max_length=20, unique=True)
     arrival_date = models.DateField()
     departure_date = models.DateField()
-    apartment_name = models.CharField(max_length=100)
-
+    rental_property = models.ForeignKey(Property, on_delete=models.SET_NULL, null=True, verbose_name="Ferienwohnung")
+    
+    # Snapshot of prices at the time of invoice creation
     price_per_night = models.DecimalField(max_digits=10, decimal_places=2)
     include_breakfast = models.BooleanField(default=False)
     breakfast_price = models.DecimalField(
         max_digits=8, decimal_places=2, default=Decimal("10.00")
-    )  # default 10€
+    )
     tax_percent = models.DecimalField(
         max_digits=5, decimal_places=2, default=Decimal("7.00")
-    )  # default 7%
+    )
 
     pdf_file = models.FileField(upload_to="invoices/", blank=True, null=True)
 
