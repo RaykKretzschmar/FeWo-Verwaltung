@@ -3,10 +3,14 @@ from .models import Property
 from .forms import PropertyForm
 from django.contrib import messages
 
+from django.contrib.auth.decorators import login_required
+
+@login_required
 def property_list(request):
     properties = Property.objects.all()
     return render(request, "properties/property_list.html", {"properties": properties})
 
+@login_required
 def property_create(request):
     if request.method == "POST":
         form = PropertyForm(request.POST)
@@ -18,6 +22,7 @@ def property_create(request):
         form = PropertyForm()
     return render(request, "properties/property_form.html", {"form": form, "title": "Neue Ferienwohnung"})
 
+@login_required
 def property_update(request, pk):
     property_obj = get_object_or_404(Property, pk=pk)
     if request.method == "POST":
@@ -30,6 +35,7 @@ def property_update(request, pk):
         form = PropertyForm(instance=property_obj)
     return render(request, "properties/property_form.html", {"form": form, "title": "Ferienwohnung bearbeiten"})
 
+@login_required
 def property_delete(request, pk):
     property_obj = get_object_or_404(Property, pk=pk)
     if request.method == "POST":

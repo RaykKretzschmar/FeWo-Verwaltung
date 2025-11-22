@@ -11,6 +11,7 @@ from docx import Document
 from docx2pdf import convert
 # import pythoncom
 
+@login_required
 def invoice_list(request):
     invoices = Invoice.objects.all().order_by("-date")
     return render(request, "invoices/invoice_list.html", {"invoices": invoices})
