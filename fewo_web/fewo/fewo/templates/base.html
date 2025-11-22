@@ -206,7 +206,8 @@
     <div class="app-container">
         <aside class="sidebar">
             <div class="nav-brand">
-                <span>FeWo Verwaltung</span>
+                <a href="{% if user.is_authenticated %}{% url 'home' %}{% else %}{% url 'landing' %}{% endif %}"
+                    style="color: inherit; text-decoration: none;">FeWo Verwaltung</a>
             </div>
             <nav>
                 <ul class="nav-list">
