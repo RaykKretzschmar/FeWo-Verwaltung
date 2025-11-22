@@ -203,7 +203,9 @@
 </head>
 
 <body>
+    {% block header_logo %}{% endblock %}
     <div class="app-container">
+        {% block sidebar %}
         <aside class="sidebar">
             <div class="nav-brand">
                 <a href="{% if user.is_authenticated %}{% url 'home' %}{% else %}{% url 'landing' %}{% endif %}"
@@ -233,6 +235,7 @@
             </div>
             {% endif %}
         </aside>
+        {% endblock %}
         <main class="main-content">
             {% if messages %}
             <div class="messages mb-4">

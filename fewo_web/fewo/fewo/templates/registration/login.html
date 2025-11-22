@@ -2,6 +2,15 @@
 
 {% block title %}Anmelden - FeWo Verwaltung{% endblock %}
 
+{% block sidebar %}{% endblock %}
+
+{% block header_logo %}
+<header style="padding: 1.5rem 2rem; background: white; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);">
+    <a href="{% url 'landing' %}"
+        style="font-size: 1.5rem; font-weight: 700; color: var(--primary); text-decoration: none;">FeWo Verwaltung</a>
+</header>
+{% endblock %}
+
 {% block content %}
 <div class="card" style="max-width: 400px; margin: 2rem auto;">
     <h1 class="text-xl font-bold mb-4 text-center">Anmelden</h1>
