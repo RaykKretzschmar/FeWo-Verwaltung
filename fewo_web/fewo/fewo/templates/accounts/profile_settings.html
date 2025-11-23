@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}Einstellungen - FeWo Verwaltung{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <h1 class="text-xl font-bold mb-4">Firmen- / Vermieter-Einstellungen</h1>
+
+    <div class="card">
+        <p class="text-sm" style="color: var(--text-light); margin-bottom: 20px;">
+            Diese Informationen werden automatisch in Ihre Rechnungen übernommen.
+        </p>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="grid grid-cols-1 gap-4">
+                <div>
+                    <label class="form-label">{{ form.company_name.label }}</label>
+                    {{ form.company_name }}
+                    {% if form.company_name.errors %}
+                    <div class="text-red-500 text-sm mt-1">{{ form.company_name.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="grid grid-cols-3 gap-4">
+                    <div class="col-span-2">
+                        <label class="form-label">{{ form.street.label }}</label>
+                        {{ form.street }}
+                        {% if form.street.errors %}
+                        <div class="text-red-500 text-sm mt-1">{{ form.street.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label class="form-label">{{ form.house_number.label }}</label>
+                        {{ form.house_number }}
+                        {% if form.house_number.errors %}
+                        <div class="text-red-500 text-sm mt-1">{{ form.house_number.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4">
+                    <div>
+                        <label class="form-label">{{ form.postal_code.label }}</label>
+                        {{ form.postal_code }}
+                        {% if form.postal_code.errors %}
+                        <div class="text-red-500 text-sm mt-1">{{ form.postal_code.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-span-2">
+                        <label class="form-label">{{ form.city.label }}</label>
+                        {{ form.city }}
+                        {% if form.city.errors %}
+                        <div class="text-red-500 text-sm mt-1">{{ form.city.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div>
+                    <label class="form-label">{{ form.phone.label }}</label>
+                    {{ form.phone }}
+                    {% if form.phone.errors %}
+                    <div class="text-red-500 text-sm mt-1">{{ form.phone.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label class="form-label">{{ form.email.label }}</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                    <div class="text-red-500 text-sm mt-1">{{ form.email.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label class="form-label">{{ form.tax_number.label }}</label>
+                    {{ form.tax_number }}
+                    {% if form.tax_number.errors %}
+                    <div class="text-red-500 text-sm mt-1">{{ form.tax_number.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label class="form-label">{{ form.bank_details.label }}</label>
+                    {{ form.bank_details }}
+                    <div class="text-xs" style="color: var(--text-light); margin-top: 4px;">
+                        Geben Sie Ihre Bankverbindung ein (z.B. IBAN, BIC, Bankname)<br>
+                        Die Bankverbindung wird in Ihrer Rechnung verwendet.
+                    </div>
+                    {% if form.bank_details.errors %}
+                    <div class="text-red-500 text-sm mt-1">{{ form.bank_details.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div style="margin-top: 24px;">
+                <button type="submit" class="btn btn-primary">Speichern</button>
+                <a href="{% url 'home' %}" class="btn btn-outline" style="margin-left: 8px;">Abbrechen</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
