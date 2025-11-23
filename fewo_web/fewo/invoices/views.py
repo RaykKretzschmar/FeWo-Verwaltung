@@ -9,7 +9,6 @@ from django.conf import settings
 from django.core.files.base import File
 import os
 from docx import Document
-from docx2pdf import convert
 # import pythoncom
 
 @login_required
@@ -28,7 +27,7 @@ def invoice_create(request):
             invoice.save()
             try:
                 generate_invoice_documents(invoice)
-                messages.success(request, "Rechnung erfolgreich erstellt (PDF-Generierung deaktiviert).")
+                messages.success(request, "Rechnung erfolgreich erstellt.")
             except Exception as e:
                 messages.error(request, f"Fehler bei der Dokumentenerstellung: {e}")
             return redirect("invoice_list")
@@ -57,7 +56,7 @@ def invoice_create_for_customer(request, customer_id=None):
             invoice.save()
             try:
                 generate_invoice_documents(invoice)
-                messages.success(request, "Rechnung erfolgreich erstellt (PDF-Generierung deaktiviert).")
+                messages.success(request, "Rechnung erfolgreich erstellt.")
             except Exception as e:
                 messages.error(request, f"Fehler bei der Dokumentenerstellung: {e}")
             return redirect("invoice_list")
@@ -163,22 +162,56 @@ def generate_invoice_documents(invoice: Invoice):
         with open(temp_docx, "rb") as f:
             invoice.docx_file.save(f"Rechnung_{invoice.invoice_number}.docx", File(f), save=True)
 
-    # Convert to PDF - DISABLED due to hanging issues
-    # pdf_path = temp_docx.replace(".docx", ".pdf")
-    # try:
-    #     # pythoncom.CoInitialize() # Needed for some environments
-    #     convert(temp_docx, pdf_path)
-    #     
-    #     # Save PDF to model
-    #     if os.path.exists(pdf_path):
-    #         with open(pdf_path, "rb") as f:
-    #             invoice.pdf_file.save(f"Rechnung_{invoice.invoice_number}.pdf", File(f), save=False)
-    #         os.remove(pdf_path)
-    #         
-    # except Exception as e:
-    #     # Log error but don't fail completely if DOCX was saved
-    #     print(f"PDF generation failed: {e}")
-    #     # We still save the invoice with the DOCX
+    # Convert to PDF using xhtml2pdf
+    try:
+        from xhtml2pdf import pisa
+        from django.template.loader import render_to_string
+        
+        # Prepare context for the HTML template
+        context = {
+            'invoice': invoice,
+            'customer': invoice.customer,
+            'landlord_info': '',
+            'sender_line': '',
+            'customer_salutation': 'r Kunde' if invoice.customer.customer_type == 'Privat' else ' Damen und Herren',
+            'company_name': '',
+            'bank_details': '',
+            'tax_number': '',
+        }
+        
+        # Get landlord info from UserProfile
+        try:
+            profile = invoice.user.profile
+            context['landlord_info'] = f"{profile.company_name}<br>{profile.street} {profile.house_number}<br>{profile.postal_code} {profile.city}"
+            if profile.phone:
+                context['landlord_info'] += f"<br>Tel: {profile.phone}"
+            if profile.email:
+                context['landlord_info'] += f"<br>Email: {profile.email}"
+            
+            context['sender_line'] = f"{profile.company_name}, {profile.street} {profile.house_number}, {profile.postal_code} {profile.city}"
+            context['company_name'] = profile.company_name
+            context['bank_details'] = profile.bank_details
+            context['tax_number'] = profile.tax_number
+        except Exception:
+            pass
+        
+        # Render the HTML template
+        html_string = render_to_string('invoices/invoice_pdf.html', context)
+        
+        # Generate PDF
+        pdf_path = os.path.join(settings.MEDIA_ROOT, "invoices", f"Rechnung_{invoice.invoice_number}.pdf")
+        os.makedirs(os.path.dirname(pdf_path), exist_ok=True)
+        
+        with open(pdf_path, "wb") as pdf_file:
+            pisa_status = pisa.CreatePDF(html_string.encode('utf-8'), dest=pdf_file, encoding='utf-8')
+        
+        if not pisa_status.err and os.path.exists(pdf_path):
+            with open(pdf_path, "rb") as f:
+                invoice.pdf_file.save(f"Rechnung_{invoice.invoice_number}.pdf", File(f), save=False)
+            os.remove(pdf_path)
+    except Exception as e:
+        # Log error but don't fail completely if DOCX was saved
+        print(f"PDF generation failed: {e}")
         
     invoice.save()
     

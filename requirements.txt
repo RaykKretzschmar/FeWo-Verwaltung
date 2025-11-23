@@ -2,3 +2,4 @@
 python-docx
 docx2pdf
 django
+xhtml2pdf
