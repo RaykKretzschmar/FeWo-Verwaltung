@@ -22,3 +22,5 @@ build.gradle
 *.spec
 
 test.*
+
+inspect_template.py
