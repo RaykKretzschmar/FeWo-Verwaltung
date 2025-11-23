@@ -31,12 +31,12 @@
                 <td>{{ customer.city }}</td>
                 <td>{{ customer.customer_number }}</td>
                 <td>
-                    <a href="{% url 'customer_update' pk=customer.pk %}" class="btn btn-outline"
-                        style="padding: 0.25rem 0.5rem; font-size: 0.875rem;">Bearbeiten</a>
-                    <a href="{% url 'customer_delete' pk=customer.pk %}" class="btn btn-outline"
-                        style="color: var(--danger); border-color: var(--danger); padding: 0.25rem 0.5rem; font-size: 0.875rem;">Löschen</a>
-                    <a href="{% url 'invoice_create_for_customer' customer_id=customer.pk %}" class="btn btn-outline"
-                        style="color: var(--primary); border-color: var(--primary); padding: 0.25rem 0.5rem; font-size: 0.875rem;">Rechnung</a>
+                    <div class="flex gap-2 flex-wrap">
+                        <a href="{% url 'customer_update' pk=customer.pk %}" class="btn btn-outline">Bearbeiten</a>
+                        <a href="{% url 'customer_delete' pk=customer.pk %}" class="btn btn-outline-danger">Löschen</a>
+                        <a href="{% url 'invoice_create_for_customer' customer_id=customer.pk %}"
+                            class="btn btn-outline-primary">Rechnung</a>
+                    </div>
                 </td>
             </tr>
             {% empty %}

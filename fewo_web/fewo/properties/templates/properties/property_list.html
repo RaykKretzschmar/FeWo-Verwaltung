@@ -22,14 +22,15 @@
             <tr>
                 <td>
                     <strong>{{ property.name }}</strong><br>
-                    <span style="color: var(--text-light); font-size: 0.875rem;">{{ property.description|linebreaksbr }}</span>
+                    <span
+                        style="color: var(--text-light); font-size: 0.875rem;">{{property.description|linebreaksbr}}</span>
                 </td>
                 <td>{{ property.price_per_night }} €</td>
                 <td>
-                    <a href="{% url 'property_update' pk=property.pk %}" class="btn btn-outline"
-                        style="padding: 0.25rem 0.5rem; font-size: 0.875rem;">Bearbeiten</a>
-                    <a href="{% url 'property_delete' pk=property.pk %}" class="btn btn-outline"
-                        style="color: var(--danger); border-color: var(--danger); padding: 0.25rem 0.5rem; font-size: 0.875rem;">Löschen</a>
+                    <div class="flex gap-2 flex-wrap">
+                        <a href="{% url 'property_update' pk=property.pk %}" class="btn btn-outline">Bearbeiten</a>
+                        <a href="{% url 'property_delete' pk=property.pk %}" class="btn btn-outline-danger">Löschen</a>
+                    </div>
                 </td>
             </tr>
             {% empty %}

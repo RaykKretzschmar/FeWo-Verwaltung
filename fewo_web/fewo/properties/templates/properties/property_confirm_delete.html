@@ -10,7 +10,7 @@
     <form method="post">
         {% csrf_token %}
         <div class="flex justify-between">
-            <button type="submit" class="btn btn-primary" style="background-color: var(--danger);">Ja, löschen</button>
+            <button type="submit" class="btn btn-danger">Ja, löschen</button>
             <a href="{% url 'property_list' %}" class="btn btn-outline">Abbrechen</a>
         </div>
     </form>

@@ -41,8 +41,7 @@
 
         <form method="post" style="display: inline;">
             {% csrf_token %}
-            <button type="submit" class="btn btn-primary"
-                style="background-color: var(--danger); border-color: var(--danger);">
+            <button type="submit" class="btn btn-danger">
                 Rechnung löschen
             </button>
             <a href="{% url 'invoice_list' %}" class="btn btn-outline" style="margin-left: 8px;">

@@ -28,14 +28,12 @@
                 <td>{{ invoice.customer }}</td>
                 <td>{{ invoice.total_price }} €</td>
                 <td>
-                    <div class="flex gap-2">
+                    <div class="flex gap-2 flex-wrap">
                         {% if invoice.pdf_file %}
-                        <a href="{{ invoice.pdf_file.url }}" class="btn btn-outline" target="_blank"
-                            style="padding: 0.25rem 0.5rem; font-size: 0.875rem;">PDF</a>
+                        <a href="{{ invoice.pdf_file.url }}" class="btn btn-outline" target="_blank">PDF</a>
                         {% endif %}
                         {% if invoice.docx_file %}
-                        <a href="{{ invoice.docx_file.url }}" class="btn btn-outline" target="_blank"
-                            style="padding: 0.25rem 0.5rem; font-size: 0.875rem;">DOCX</a>
+                        <a href="{{ invoice.docx_file.url }}" class="btn btn-outline" target="_blank">DOCX</a>
                         {% endif %}
                         {% if not invoice.pdf_file and not invoice.docx_file %}
                         <span style="color: var(--text-light);">Keine Dateien</span>
@@ -43,8 +41,7 @@
                     </div>
                 </td>
                 <td>
-                    <a href="{% url 'invoice_delete' invoice.pk %}" class="btn btn-outline"
-                        style="padding: 0.25rem 0.5rem; font-size: 0.875rem; color: var(--danger); border-color: var(--danger);">
+                    <a href="{% url 'invoice_delete' invoice.pk %}" class="btn btn-outline-danger">
                         Löschen
                     </a>
                 </td>
