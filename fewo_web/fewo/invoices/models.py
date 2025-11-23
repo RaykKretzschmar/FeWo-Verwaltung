@@ -29,6 +29,7 @@ class Invoice(models.Model):
     )
 
     pdf_file = models.FileField(upload_to="invoices/", blank=True, null=True)
+    docx_file = models.FileField(upload_to="invoices/", blank=True, null=True)
 
     @property
     def nights(self) -> int:

@@ -26,10 +26,10 @@ def invoice_create(request):
             invoice.user = request.user
             invoice.save()
             try:
-                generate_invoice_pdf(invoice)
+                generate_invoice_documents(invoice)
                 messages.success(request, "Rechnung erfolgreich erstellt.")
             except Exception as e:
-                messages.error(request, f"Fehler bei der PDF-Erstellung: {e}")
+                messages.error(request, f"Fehler bei der Dokumentenerstellung: {e}")
             return redirect("invoice_list")
     else:
         form = InvoiceForm()
@@ -55,10 +55,10 @@ def invoice_create_for_customer(request, customer_id=None):
                 invoice.customer = customer
             invoice.save()
             try:
-                generate_invoice_pdf(invoice)
+                generate_invoice_documents(invoice)
                 messages.success(request, "Rechnung erfolgreich erstellt.")
             except Exception as e:
-                messages.error(request, f"Fehler bei der PDF-Erstellung: {e}")
+                messages.error(request, f"Fehler bei der Dokumentenerstellung: {e}")
             return redirect("invoice_list")
     else:
         initial = {}
@@ -88,10 +88,10 @@ def replace_text_in_doc(doc, replacements):
                             if old_text in run.text:
                                 run.text = run.text.replace(str(old_text), str(new_text))
 
-def generate_invoice_pdf(invoice: Invoice):
+def generate_invoice_documents(invoice: Invoice):
     # Path to template
-    # The template is in the fewo_web directory (one level up from BASE_DIR which is fewo_web/fewo)
-    template_path = settings.BASE_DIR.parent / "Rechnungsvorlage.docx"
+    # The template is in the root directory (two levels up from BASE_DIR which is fewo_web/fewo)
+    template_path = settings.BASE_DIR.parent.parent / "Rechnungsvorlage.docx"
     if not os.path.exists(template_path):
         # Fallback if not found in root, try static or media
         raise FileNotFoundError(f"Template not found at {template_path}")
@@ -134,6 +134,22 @@ def generate_invoice_pdf(invoice: Invoice):
         replacements["Frst"] = "0,00"
         replacements["Frst_ges"] = "0,00"
 
+    # Landlord data from UserProfile
+    try:
+        profile = invoice.user.profile
+        landlord_address = f"{profile.company_name}\n{profile.street} {profile.house_number}\n{profile.postal_code} {profile.city}"
+        if profile.phone:
+            landlord_address += f"\nTel: {profile.phone}"
+        if profile.email:
+            landlord_address += f"\nEmail: {profile.email}"
+    except Exception:
+        # Fallback if no profile exists
+        landlord_address = "Vermieter Adresse nicht konfiguriert"
+
+    replacements["{Vermieter_Anschrift}"] = landlord_address
+    # Also support without braces if that's how it ended up (though script put braces)
+    replacements["Vermieter_Anschrift"] = landlord_address
+
     replace_text_in_doc(doc, replacements)
 
     # Save temporary docx
@@ -141,22 +157,31 @@ def generate_invoice_pdf(invoice: Invoice):
     os.makedirs(os.path.dirname(temp_docx), exist_ok=True)
     doc.save(temp_docx)
 
+    # Save DOCX to model
+    if os.path.exists(temp_docx):
+        with open(temp_docx, "rb") as f:
+            invoice.docx_file.save(f"Rechnung_{invoice.invoice_number}.docx", File(f), save=True)
+
     # Convert to PDF
     pdf_path = temp_docx.replace(".docx", ".pdf")
     try:
         # pythoncom.CoInitialize() # Needed for some environments
         convert(temp_docx, pdf_path)
-    except Exception as e:
-        # If conversion fails (e.g. no Word installed), we might want to just keep the docx
-        # or raise error.
-        raise e
-
-    # Save to model
-    if os.path.exists(pdf_path):
-        with open(pdf_path, "rb") as f:
-            invoice.pdf_file.save(f"Rechnung_{invoice.invoice_number}.pdf", File(f), save=True)
         
-        # Cleanup
-        os.remove(pdf_path)
+        # Save PDF to model
+        if os.path.exists(pdf_path):
+            with open(pdf_path, "rb") as f:
+                invoice.pdf_file.save(f"Rechnung_{invoice.invoice_number}.pdf", File(f), save=False)
+            os.remove(pdf_path)
+            
+    except Exception as e:
+        # Log error but don't fail completely if DOCX was saved
+        print(f"PDF generation failed: {e}")
+        # We still save the invoice with the DOCX
+        
+    invoice.save()
     
-    os.remove(temp_docx)
+    # Cleanup temp docx
+    if os.path.exists(temp_docx):
+        os.remove(temp_docx)
+

@@ -16,7 +16,7 @@
                 <th>Datum</th>
                 <th>Kunde</th>
                 <th>Betrag</th>
-                <th>PDF</th>
+                <th>Downloads</th>
             </tr>
         </thead>
         <tbody>
@@ -27,12 +27,19 @@
                 <td>{{ invoice.customer }}</td>
                 <td>{{ invoice.total_price }} €</td>
                 <td>
-                    {% if invoice.pdf_file %}
-                    <a href="{{ invoice.pdf_file.url }}" class="btn btn-outline" target="_blank"
-                        style="padding: 0.25rem 0.5rem; font-size: 0.875rem;">Download</a>
-                    {% else %}
-                    <span style="color: var(--text-light);">Kein PDF</span>
-                    {% endif %}
+                    <div class="flex gap-2">
+                        {% if invoice.pdf_file %}
+                        <a href="{{ invoice.pdf_file.url }}" class="btn btn-outline" target="_blank"
+                            style="padding: 0.25rem 0.5rem; font-size: 0.875rem;">PDF</a>
+                        {% endif %}
+                        {% if invoice.docx_file %}
+                        <a href="{{ invoice.docx_file.url }}" class="btn btn-outline" target="_blank"
+                            style="padding: 0.25rem 0.5rem; font-size: 0.875rem;">DOCX</a>
+                        {% endif %}
+                        {% if not invoice.pdf_file and not invoice.docx_file %}
+                        <span style="color: var(--text-light);">Keine Dateien</span>
+                        {% endif %}
+                    </div>
                 </td>
             </tr>
             {% empty %}
