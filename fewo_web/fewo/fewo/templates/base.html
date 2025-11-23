@@ -271,8 +271,6 @@
                     </li>
                     <li><a href="{% url 'invoice_list' %}"
                             class="nav-link {% if 'invoices' in request.path %}active{% endif %}">Rechnungen</a></li>
-                    <li><a href="{% url 'profile_settings' %}"
-                            class="nav-link {% if 'settings' in request.path %}active{% endif %}">Einstellungen</a></li>
                 </ul>
             </nav>
             {% if user.is_authenticated %}
@@ -280,6 +278,10 @@
                 <div style="margin-bottom: 1rem; color: var(--text-light); font-size: 0.875rem;">
                     Angemeldet als <strong>{{ user.username }}</strong>
                 </div>
+                <a href="{% url 'profile_settings' %}" class="btn btn-outline"
+                    style="width: 100%; justify-content: center; margin-bottom: 0.5rem; padding: 0.5rem 1rem; font-size: 1rem;">
+                    Einstellungen
+                </a>
                 <form action="{% url 'logout' %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-outline"
