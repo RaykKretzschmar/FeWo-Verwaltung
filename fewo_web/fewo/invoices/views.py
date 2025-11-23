@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Invoice
 from .forms import InvoiceForm
 from customers.models import Customer
+from properties.models import Property
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.conf import settings
@@ -27,7 +28,7 @@ def invoice_create(request):
             invoice.save()
             try:
                 generate_invoice_documents(invoice)
-                messages.success(request, "Rechnung erfolgreich erstellt.")
+                messages.success(request, "Rechnung erfolgreich erstellt (PDF-Generierung deaktiviert).")
             except Exception as e:
                 messages.error(request, f"Fehler bei der Dokumentenerstellung: {e}")
             return redirect("invoice_list")
@@ -56,7 +57,7 @@ def invoice_create_for_customer(request, customer_id=None):
             invoice.save()
             try:
                 generate_invoice_documents(invoice)
-                messages.success(request, "Rechnung erfolgreich erstellt.")
+                messages.success(request, "Rechnung erfolgreich erstellt (PDF-Generierung deaktiviert).")
             except Exception as e:
                 messages.error(request, f"Fehler bei der Dokumentenerstellung: {e}")
             return redirect("invoice_list")
@@ -162,22 +163,22 @@ def generate_invoice_documents(invoice: Invoice):
         with open(temp_docx, "rb") as f:
             invoice.docx_file.save(f"Rechnung_{invoice.invoice_number}.docx", File(f), save=True)
 
-    # Convert to PDF
-    pdf_path = temp_docx.replace(".docx", ".pdf")
-    try:
-        # pythoncom.CoInitialize() # Needed for some environments
-        convert(temp_docx, pdf_path)
-        
-        # Save PDF to model
-        if os.path.exists(pdf_path):
-            with open(pdf_path, "rb") as f:
-                invoice.pdf_file.save(f"Rechnung_{invoice.invoice_number}.pdf", File(f), save=False)
-            os.remove(pdf_path)
-            
-    except Exception as e:
-        # Log error but don't fail completely if DOCX was saved
-        print(f"PDF generation failed: {e}")
-        # We still save the invoice with the DOCX
+    # Convert to PDF - DISABLED due to hanging issues
+    # pdf_path = temp_docx.replace(".docx", ".pdf")
+    # try:
+    #     # pythoncom.CoInitialize() # Needed for some environments
+    #     convert(temp_docx, pdf_path)
+    #     
+    #     # Save PDF to model
+    #     if os.path.exists(pdf_path):
+    #         with open(pdf_path, "rb") as f:
+    #             invoice.pdf_file.save(f"Rechnung_{invoice.invoice_number}.pdf", File(f), save=False)
+    #         os.remove(pdf_path)
+    #         
+    # except Exception as e:
+    #     # Log error but don't fail completely if DOCX was saved
+    #     print(f"PDF generation failed: {e}")
+    #     # We still save the invoice with the DOCX
         
     invoice.save()
     
