@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Rechnung löschen - FeWo Verwaltung{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <h1 class="text-xl font-bold mb-4">Rechnung löschen</h1>
+
+    <div class="card">
+        <p style="margin-bottom: 20px;">
+            Möchten Sie die folgende Rechnung wirklich löschen?
+        </p>
+
+        <div style="background-color: var(--background); padding: 16px; border-radius: 8px; margin-bottom: 20px;">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="font-weight: bold; width: 40%; padding: 4px 0;">Rechnungsnummer:</td>
+                    <td style="padding: 4px 0;">{{ invoice.invoice_number }}</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold; padding: 4px 0;">Datum:</td>
+                    <td style="padding: 4px 0;">{{ invoice.date|date:"d.m.Y" }}</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold; padding: 4px 0;">Kunde:</td>
+                    <td style="padding: 4px 0;">{{ invoice.customer }}</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold; padding: 4px 0;">Betrag:</td>
+                    <td style="padding: 4px 0;">{{ invoice.total_price }} €</td>
+                </tr>
+            </table>
+        </div>
+
+        <div
+            style="padding: 12px; background-color: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; margin-bottom: 20px;">
+            <strong style="color: #991b1b;">Achtung:</strong>
+            <span style="color: #991b1b;">Diese Aktion kann nicht rückgängig gemacht werden. Die zugehörigen Dateien
+                (PDF und DOCX) werden ebenfalls gelöscht.</span>
+        </div>
+
+        <form method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary"
+                style="background-color: var(--danger); border-color: var(--danger);">
+                Rechnung löschen
+            </button>
+            <a href="{% url 'invoice_list' %}" class="btn btn-outline" style="margin-left: 8px;">
+                Abbrechen
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -72,6 +72,26 @@ def invoice_create_for_customer(request, customer_id=None):
         request, "invoices/invoice_form.html", {"form": form, "customer": customer, "title": "Rechnung erstellen"}
     )
 
+@login_required
+def invoice_delete(request, pk):
+    invoice = get_object_or_404(Invoice, pk=pk, user=request.user)
+    
+    if request.method == "POST":
+        # Delete associated files if they exist
+        if invoice.pdf_file:
+            if os.path.exists(invoice.pdf_file.path):
+                os.remove(invoice.pdf_file.path)
+        if invoice.docx_file:
+            if os.path.exists(invoice.docx_file.path):
+                os.remove(invoice.docx_file.path)
+        
+        invoice_number = invoice.invoice_number
+        invoice.delete()
+        messages.success(request, f"Rechnung {invoice_number} wurde erfolgreich gelöscht.")
+        return redirect("invoice_list")
+    
+    return render(request, "invoices/invoice_confirm_delete.html", {"invoice": invoice})
+
 def replace_text_in_doc(doc, replacements):
     for p in doc.paragraphs:
         for run in p.runs:
