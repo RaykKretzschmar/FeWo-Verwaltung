@@ -28,4 +28,69 @@
         </div>
     </form>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const propertySelect = document.getElementById('id_rental_property');
+        const priceInput = document.getElementById('id_price_per_night');
+        const breakfastPriceInput = document.getElementById('id_breakfast_price');
+        const taxPercentInput = document.getElementById('id_tax_percent');
+
+        function loadPropertyDetails(propertyId) {
+            if (!propertyId) return;
+
+            fetch(`/properties/${propertyId}/details/`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Only update if the field is empty or we want to enforce defaults
+                    // For now, let's update if the user hasn't manually changed it? 
+                    // Or just always update on change? Standard behavior is usually update on change.
+                    // But on load, maybe we shouldn't overwrite if it's an edit form?
+                    // Since this is mostly for "create", overwriting is probably fine on change.
+                    // On load, if values are present, maybe don't overwrite? 
+                    // But the requirement is "automatically load price".
+
+                    if (priceInput && !priceInput.value) priceInput.value = data.price_per_night;
+                    if (breakfastPriceInput && !breakfastPriceInput.value) breakfastPriceInput.value = data.default_breakfast_price;
+                    if (taxPercentInput && !taxPercentInput.value) taxPercentInput.value = data.default_tax_percent;
+                })
+                .catch(error => console.error('Error fetching property details:', error));
+        }
+
+        if (propertySelect) {
+            // Handle change event
+            propertySelect.addEventListener('change', function () {
+                const propertyId = this.value;
+                // On explicit change, we probably want to overwrite even if values exist, 
+                // because the user switched properties.
+                if (propertyId) {
+                    fetch(`/properties/${propertyId}/details/`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (priceInput) priceInput.value = data.price_per_night;
+                            if (breakfastPriceInput) breakfastPriceInput.value = data.default_breakfast_price;
+                            if (taxPercentInput) taxPercentInput.value = data.default_tax_percent;
+                        })
+                        .catch(error => console.error('Error fetching property details:', error));
+                }
+            });
+
+            // Handle initial load (e.g. if form has errors and re-renders, or edit mode)
+            // If it's a new form (no values), load defaults.
+            // If it's an edit form (values exist), maybe don't overwrite?
+            // Let's check if values are empty.
+            if (propertySelect.value) {
+                // If we have a property selected but no price, load it.
+                if (priceInput && !priceInput.value) {
+                    loadPropertyDetails(propertySelect.value);
+                }
+            }
+        }
+    });
+</script>
 {% endblock %}

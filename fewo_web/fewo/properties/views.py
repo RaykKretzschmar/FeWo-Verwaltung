@@ -45,3 +45,15 @@ def property_delete(request, pk):
         messages.success(request, "Ferienwohnung erfolgreich gelöscht.")
         return redirect("property_list")
     return render(request, "properties/property_confirm_delete.html", {"property": property_obj})
+
+from django.http import JsonResponse
+
+@login_required
+def get_property_details(request, pk):
+    property_obj = get_object_or_404(Property, pk=pk, user=request.user)
+    data = {
+        "price_per_night": property_obj.price_per_night,
+        "default_breakfast_price": property_obj.default_breakfast_price,
+        "default_tax_percent": property_obj.default_tax_percent,
+    }
+    return JsonResponse(data)
