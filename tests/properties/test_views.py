@@ -5,10 +5,13 @@ from django.contrib.auth.models import User
 from decimal import Decimal
 import json
 
+from accounts.models import UserProfile
+
 class PropertyViewTest(TestCase):
     def setUp(self):
         self.client = Client()
         self.user = User.objects.create_user(username='testuser', password='password')
+        self.profile = UserProfile.objects.create(user=self.user, has_subscription=True)
         self.client.login(username='testuser', password='password')
         self.property = Property.objects.create(
             user=self.user,

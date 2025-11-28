@@ -27,3 +27,24 @@ def profile_settings(request):
         form = UserProfileForm(instance=profile)
     
     return render(request, 'accounts/profile_settings.html', {'form': form})
+
+@login_required
+def subscription_view(request):
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
+    
+    if request.method == 'POST':
+        profile.has_subscription = True
+        profile.save()
+        messages.success(request, 'Herzlichen Glückwunsch! Sie haben das Abo erfolgreich abgeschlossen.')
+        return redirect('property_list')
+        
+    return render(request, 'accounts/subscription.html')
+
+@login_required
+def cancel_subscription(request):
+    if request.method == 'POST':
+        profile, created = UserProfile.objects.get_or_create(user=request.user)
+        profile.has_subscription = False
+        profile.save()
+        messages.success(request, 'Ihr Abo wurde erfolgreich gekündigt.')
+    return redirect('profile_settings')

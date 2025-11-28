@@ -12,6 +12,14 @@ def property_list(request):
 
 @login_required
 def property_create(request):
+    # Check if user has reached the limit
+    property_count = Property.objects.filter(user=request.user).count()
+    has_subscription = hasattr(request.user, 'profile') and request.user.profile.has_subscription
+    
+    if property_count >= 1 and not has_subscription:
+        messages.error(request, "Sie benötigen ein Abo, um mehr als eine Ferienwohnung anzulegen.")
+        return redirect("property_list")
+
     if request.method == "POST":
         form = PropertyForm(request.POST)
         if form.is_valid():

@@ -310,6 +310,13 @@
                     Angemeldet als <strong>{{ user.username }}</strong>
                 </div>
 
+                {% if not user.profile.has_subscription %}
+                <a href="{% url 'subscription' %}"
+                    style="display: block; color: #eab308; text-decoration: none; margin-bottom: 0.5rem; font-size: 0.875rem; padding: 0.25rem 0; font-weight: bold;">
+                    ⭐ Jetzt abonnieren
+                </a>
+                {% endif %}
+
                 <a href="{% url 'profile_settings' %}"
                     style="display: block; color: inherit; text-decoration: none; margin-bottom: 0.5rem; font-size: 0.875rem; padding: 0.25rem 0;">
                     ⚙️ Einstellungen

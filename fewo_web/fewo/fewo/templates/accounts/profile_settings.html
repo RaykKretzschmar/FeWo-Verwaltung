@@ -11,6 +11,40 @@
             Diese Informationen werden automatisch in Ihre Rechnungen übernommen.
         </p>
 
+        <div style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border);">
+            <h2 class="text-xl font-bold mb-4">Abonnement</h2>
+            <div class="flex justify-between items-center"
+                style="background-color: #f8fafc; padding: 1rem; border-radius: 0.5rem; border: 1px solid var(--border);">
+                <div>
+                    <div class="font-bold">Status:
+                        {% if user.profile.has_subscription %}
+                        <span style="color: #10b981;">Premium</span>
+                        {% else %}
+                        <span style="color: var(--text-light);">Kostenlos</span>
+                        {% endif %}
+                    </div>
+                    <div class="text-sm" style="color: var(--text-light); margin-top: 0.25rem;">
+                        {% if user.profile.has_subscription %}
+                        Sie können unbegrenzt viele Ferienwohnungen verwalten.
+                        {% else %}
+                        Sie können maximal eine Ferienwohnung verwalten.
+                        {% endif %}
+                    </div>
+                </div>
+                <div>
+                    {% if user.profile.has_subscription %}
+                    <form action="{% url 'cancel_subscription' %}" method="post"
+                        onsubmit="return confirm('Möchten Sie Ihr Abo wirklich kündigen?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger">Abo kündigen</button>
+                    </form>
+                    {% else %}
+                    <a href="{% url 'subscription' %}" class="btn btn-primary">Jetzt upgraden</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
         <form method="post">
             {% csrf_token %}
 

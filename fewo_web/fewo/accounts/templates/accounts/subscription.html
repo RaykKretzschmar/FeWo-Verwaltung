@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Abo abschließen - FeWo Verwaltung{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <div class="card">
+        <h1 class="text-xl font-bold mb-4">Erweitern Sie Ihr Konto</h1>
+        <p class="mb-4">
+            Mit unserem Premium-Abo können Sie unbegrenzt viele Ferienwohnungen verwalten.
+            Aktuell sind Sie auf eine Wohnung beschränkt.
+        </p>
+
+        <div
+            style="background-color: #f0f9ff; border: 1px solid #bae6fd; border-radius: 0.5rem; padding: 1.5rem; margin-bottom: 1.5rem;">
+            <h3 class="font-bold" style="color: #0369a1; margin-top: 0;">Premium Vorteile:</h3>
+            <ul style="list-style-type: disc; padding-left: 1.5rem; color: #0c4a6e;">
+                <li>Unbegrenzte Anzahl an Ferienwohnungen</li>
+                <li>Priorisierter Support</li>
+                <li>Erweiterte Statistiken (bald verfügbar)</li>
+            </ul>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary"
+                style="width: 100%; justify-content: center; padding: 1rem; font-size: 1.1rem;">
+                ⭐ Jetzt Premium-Abo aktivieren
+            </button>
+        </form>
+        <p class="text-xs text-light mt-4" style="text-align: center; color: var(--text-light);">
+            Dies ist eine Demo. Es fallen keine echten Kosten an.
+        </p>
+    </div>
+</div>
+{% endblock %}
