@@ -11,25 +11,25 @@ from django.contrib.auth.models import User
 
 class Invoice(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    date = models.DateField(default=date.today)
-    invoice_number = models.CharField(max_length=20, unique=True)
-    arrival_date = models.DateField()
-    departure_date = models.DateField()
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, verbose_name="Kunde")
+    date = models.DateField(default=date.today, verbose_name="Rechnungsdatum")
+    invoice_number = models.CharField(max_length=20, unique=True, verbose_name="Rechnungsnummer")
+    arrival_date = models.DateField(verbose_name="Anreisedatum")
+    departure_date = models.DateField(verbose_name="Abreisedatum")
     rental_property = models.ForeignKey(Property, on_delete=models.SET_NULL, null=True, verbose_name="Ferienwohnung")
     
     # Snapshot of prices at the time of invoice creation
-    price_per_night = models.DecimalField(max_digits=10, decimal_places=2)
-    include_breakfast = models.BooleanField(default=False)
+    price_per_night = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Preis pro Nacht")
+    include_breakfast = models.BooleanField(default=False, verbose_name="Frühstück inklusive")
     breakfast_price = models.DecimalField(
-        max_digits=8, decimal_places=2, default=Decimal("10.00")
+        max_digits=8, decimal_places=2, default=Decimal("10.00"), verbose_name="Preis für Frühstück"
     )
     tax_percent = models.DecimalField(
-        max_digits=5, decimal_places=2, default=Decimal("7.00")
+        max_digits=5, decimal_places=2, default=Decimal("7.00"), verbose_name="Steuersatz (%)"
     )
 
-    pdf_file = models.FileField(upload_to="invoices/", blank=True, null=True)
-    docx_file = models.FileField(upload_to="invoices/", blank=True, null=True)
+    pdf_file = models.FileField(upload_to="invoices/", blank=True, null=True, verbose_name="PDF Datei")
+    docx_file = models.FileField(upload_to="invoices/", blank=True, null=True, verbose_name="Word Datei")
 
     @property
     def nights(self) -> int:
