@@ -200,13 +200,31 @@ def generate_invoice_documents(invoice: Invoice):
         from xhtml2pdf import pisa
         from django.template.loader import render_to_string
         
+        # Determine greeting
+        greeting = "Sehr geehrte Damen und Herren"
+        c = invoice.customer
+        if c.customer_type == 'Firma':
+            greeting = "Sehr geehrte Damen und Herren"
+        elif c.is_custom_salutation and c.custom_salutation:
+            greeting = c.custom_salutation
+        else:
+            # Standard salutation logic
+            title_part = f" {c.title}" if c.title else ""
+            if c.salutation == "Herr":
+                greeting = f"Sehr geehrter Herr{title_part} {c.last_name}"
+            elif c.salutation == "Frau":
+                greeting = f"Sehr geehrte Frau{title_part} {c.last_name}"
+            else:
+                # Fallback for Divers or empty
+                greeting = f"Guten Tag{title_part} {c.first_name} {c.last_name}"
+
         # Prepare context for the HTML template
         context = {
             'invoice': invoice,
             'customer': invoice.customer,
             'landlord_info': '',
             'sender_line': '',
-            'customer_salutation': 'r Kunde' if invoice.customer.customer_type == 'Privat' else ' Damen und Herren',
+            'greeting': greeting,
             'company_name': '',
             'bank_details': '',
             'tax_number': '',

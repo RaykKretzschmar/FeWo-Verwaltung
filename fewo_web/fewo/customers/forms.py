@@ -6,7 +6,10 @@ class CustomerForm(forms.ModelForm):
         model = Customer
         fields = [
             "customer_type",
+            "is_custom_salutation",
+            "title",
             "salutation",
+            "custom_salutation",
             "first_name",
             "last_name",
             "company_name",
@@ -17,7 +20,10 @@ class CustomerForm(forms.ModelForm):
         ]
         widgets = {
             "customer_type": forms.Select(attrs={"class": "form-control"}),
-            "salutation": forms.TextInput(attrs={"class": "form-control"}),
+            "salutation": forms.Select(attrs={"class": "form-control"}),
+            "title": forms.TextInput(attrs={"class": "form-control"}),
+            "is_custom_salutation": forms.CheckboxInput(attrs={"class": "form-checkbox", "id": "id_is_custom_salutation"}),
+            "custom_salutation": forms.TextInput(attrs={"class": "form-control", "id": "id_custom_salutation"}),
             "first_name": forms.TextInput(attrs={"class": "form-control"}),
             "last_name": forms.TextInput(attrs={"class": "form-control"}),
             "company_name": forms.TextInput(attrs={"class": "form-control"}),

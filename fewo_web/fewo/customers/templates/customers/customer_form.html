@@ -33,26 +33,54 @@
     document.addEventListener('DOMContentLoaded', function () {
         const typeSelect = document.getElementById('id_customer_type');
         const companyRow = document.getElementById('id_company_name').closest('.form-group');
-        const salutationRow = document.getElementById('id_salutation').closest('.form-group');
-        const firstNameRow = document.getElementById('id_first_name').closest('.form-group');
-        const lastNameRow = document.getElementById('id_last_name').closest('.form-group');
 
-        function updateFields() {
+        // Salutation Group
+        const salutationRow = document.getElementById('id_salutation').closest('.form-group');
+        const titleRow = document.getElementById('id_title').closest('.form-group');
+        const isCustomRow = document.getElementById('id_is_custom_salutation').closest('.form-group');
+        const customSalutationRow = document.getElementById('id_custom_salutation').closest('.form-group');
+
+        const isCustomCheckbox = document.getElementById('id_is_custom_salutation');
+
+        function updateTypeFields() {
             if (typeSelect.value === 'Firma') {
                 companyRow.style.display = 'block';
+                // For Firma, we might still want contact person details, but maybe not the full salutation complexity?
+                // Existing logic hid salutation. Let's hide the whole group for now or user might want "Ansprechpartner" salutation.
+                // Assuming "Ansprechpartner" also has a salutation, we should probably SHOW it.
+                // But the user's previous request implies "Firma" -> Company Name is main.
+                // However, let's stick to previous explicit behavior: Hide Salutation for Firma.
                 salutationRow.style.display = 'none';
-                // We keep first/last name as contact person, or hide if strictly following Tkinter
-                // User said "Custom form should change". 
-                // Let's hide Salutation for Firma. 
-                // And maybe change label of First Name to "Ansprechpartner Vorname"?
+                titleRow.style.display = 'none';
+                isCustomRow.style.display = 'none';
+                customSalutationRow.style.display = 'none';
             } else {
                 companyRow.style.display = 'none';
-                salutationRow.style.display = 'block';
+                // Show bits based on custom check
+                isCustomRow.style.display = 'block';
+                updateSalutationFields();
             }
         }
 
-        typeSelect.addEventListener('change', updateFields);
-        updateFields(); // Initial call
+        function updateSalutationFields() {
+            if (typeSelect.value === 'Firma') return; // Handled by updateTypeFields
+
+            if (isCustomCheckbox.checked) {
+                salutationRow.style.display = 'none';
+                titleRow.style.display = 'none';
+                customSalutationRow.style.display = 'block';
+            } else {
+                salutationRow.style.display = 'block';
+                titleRow.style.display = 'block';
+                customSalutationRow.style.display = 'none';
+            }
+        }
+
+        typeSelect.addEventListener('change', updateTypeFields);
+        isCustomCheckbox.addEventListener('change', updateSalutationFields);
+
+        updateTypeFields(); // Initial call
+        // updateSalutationFields is called inside updateTypeFields if needed
     });
 </script>
 {% endblock %}

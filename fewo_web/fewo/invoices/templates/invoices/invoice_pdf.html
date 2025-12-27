@@ -174,7 +174,7 @@
 
     <div class="invoice-title">Rechnung</div>
 
-    <p>Sehr geehrte{{ customer_salutation }},</p>
+    <p>{{ greeting }},</p>
     <p>
         für Ihren Aufenthalt vom {{ invoice.arrival_date|date:"d.m.Y" }}
         bis {{ invoice.departure_date|date:"d.m.Y" }}
