@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Kunde: {{ customer.first_name }} {{ customer.last_name }} - FeWo Verwaltung{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <a href="{% url 'customer_list' %}" class="text-blue-600 hover:text-blue-800 mb-4 inline-block">&larr; Zurück zur
+        Übersicht</a>
+
+    <div class="flex justify-between items-start">
+        <div>
+            <h1 class="text-2xl font-bold mb-2">
+                {% if customer.customer_type == 'Firma' %}
+                {{ customer.company_name }}
+                <span class="text-sm font-normal text-gray-500 ml-2">(Firma)</span>
+                {% else %}
+                {{ customer.first_name }} {{ customer.last_name }}
+                {% endif %}
+            </h1>
+            <p class="text-gray-600">Kundennummer: {{ customer.customer_number }}</p>
+        </div>
+        <div class="flex gap-2">
+            <a href="{% url 'customer_update' pk=customer.pk %}" class="btn btn-outline">Bearbeiten</a>
+            <a href="{% url 'invoice_create_for_customer' customer_id=customer.pk %}" class="btn btn-primary">Neue
+                Rechnung</a>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    <div class="card p-6 bg-white rounded-lg shadow">
+        <h2 class="text-xl font-semibold mb-4">Kontaktdaten</h2>
+        <dl class="grid grid-cols-[120px_1fr] gap-y-2">
+            <dt class="text-gray-600">Anschrift:</dt>
+            <dd>
+                {{ customer.street }} {{ customer.house_number }}<br>
+                {{ customer.postal_code }} {{ customer.city }}
+            </dd>
+
+            {% if customer.customer_type == 'Firma' %}
+            <dt class="text-gray-600">Ansprechpartner:</dt>
+            <dd>{{ customer.salutation }} {{ customer.first_name }} {{ customer.last_name }}</dd>
+            {% endif %}
+        </dl>
+    </div>
+
+    <!-- Placeholder for stats if needed later -->
+</div>
+
+<div class="card bg-white rounded-lg shadow">
+    <div class="p-4 border-b">
+        <h2 class="text-xl font-semibold">Besuchshistorie</h2>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="table w-full">
+            <thead>
+                <tr class="text-left">
+                    <th class="p-4">Anreise</th>
+                    <th class="p-4">Abreise</th>
+                    <th class="p-4">Ferienwohnung</th>
+                    <th class="p-4">Rechnungs-Nr.</th>
+                    <th class="p-4">Betrag</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for invoice in invoices %}
+                <tr class="border-t hover:bg-gray-50">
+                    <td class="p-4">{{ invoice.arrival_date|date:"d.m.Y" }}</td>
+                    <td class="p-4">{{ invoice.departure_date|date:"d.m.Y" }}</td>
+                    <td class="p-4">{{ invoice.rental_property.name|default:"-" }}</td>
+                    <td class="p-4">
+                        <a href="#" class="text-blue-600 hover:underline">{{ invoice.invoice_number }}</a>
+                        <!-- TODO: Link to invoice detail/download if available -->
+                    </td>
+                    <td class="p-4">{{ invoice.total_price }} €</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="p-8 text-center text-gray-500">
+                        Noch keine Besuche verzeichnet.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

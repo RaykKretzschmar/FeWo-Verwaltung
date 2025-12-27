@@ -45,3 +45,19 @@ def customer_delete(request, pk):
         messages.success(request, "Kunde erfolgreich gelöscht.")
         return redirect("customer_list")
     return render(request, "customers/customer_confirm_delete.html", {"customer": customer})
+
+@login_required
+def customer_detail(request, pk):
+    customer = get_object_or_404(Customer, pk=pk, user=request.user)
+    # Import Invoice inside to avoid circular dependency if any, though likely not needed here but best practice if models were circular.
+    # However, Customer is in a different app than Invoice. Invoice depends on Customer. 
+    # We need to filter Invoices by customer.
+    # Since Invoice model has a ForeinKey to Customer related_name (default is invoice_set), we can use that.
+    # But let's check Invoice model again. It has `customer = models.ForeignKey(Customer, ...)`
+    
+    invoices = customer.invoice_set.all().order_by('-arrival_date')
+    
+    return render(request, "customers/customer_detail.html", {
+        "customer": customer, 
+        "invoices": invoices
+    })

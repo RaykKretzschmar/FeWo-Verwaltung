@@ -20,8 +20,9 @@
         </thead>
         <tbody>
             {% for customer in customers %}
-            <tr>
-                <td>
+            <tr onclick="window.location='{% url 'customer_detail' pk=customer.pk %}'"
+                class="hover:bg-gray-50 cursor-pointer transition-colors">
+                <td class="font-medium">
                     {% if customer.customer_type == 'Firma' %}
                     {{ customer.company_name }} (Firma)
                     {% else %}
@@ -30,7 +31,7 @@
                 </td>
                 <td>{{ customer.city }}</td>
                 <td>{{ customer.customer_number }}</td>
-                <td>
+                <td onclick="event.stopPropagation()">
                     <div class="flex gap-2 flex-wrap">
                         <a href="{% url 'customer_update' pk=customer.pk %}" class="btn btn-outline">Bearbeiten</a>
                         <a href="{% url 'customer_delete' pk=customer.pk %}" class="btn btn-outline-danger">Löschen</a>
