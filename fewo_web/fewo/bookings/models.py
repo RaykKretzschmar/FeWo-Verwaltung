@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from properties.models import Property
 from customers.models import Customer
@@ -9,6 +10,7 @@ class Booking(models.Model):
         CONFIRMED = 'confirmed', _('Bestätigt')
         CANCELED = 'canceled', _('Storniert')
 
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='bookings', verbose_name=_("Ferienwohnung"))
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='bookings', verbose_name=_("Kunde"))
     check_in = models.DateField(verbose_name=_("Check-in"))
