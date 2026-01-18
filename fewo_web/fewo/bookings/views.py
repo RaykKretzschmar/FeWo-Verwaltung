@@ -1,21 +1,28 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 from invoices.models import Invoice
 from properties.models import Property
 
+@login_required
 def calendar_view(request):
     property_id = request.GET.get('property')
     context = {}
     if property_id:
-        property_obj = get_object_or_404(Property, pk=property_id)
+        property_obj = get_object_or_404(Property, pk=property_id, user=request.user)
         context['property'] = property_obj
     return render(request, 'bookings/calendar.html', context)
 
+@login_required
 def booking_api(request):
     property_id = request.GET.get('property')
-    # Filter for invoices that have dates set (though model fields are required)
-    invoices = Invoice.objects.filter(arrival_date__isnull=False, departure_date__isnull=False)
+    # Filter for invoices that have dates set and belong to the current user
+    invoices = Invoice.objects.filter(
+        user=request.user,
+        arrival_date__isnull=False,
+        departure_date__isnull=False
+    )
     
     if property_id:
         invoices = invoices.filter(rental_property_id=property_id)
