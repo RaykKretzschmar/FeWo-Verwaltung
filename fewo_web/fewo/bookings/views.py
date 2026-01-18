@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.urls import reverse
-from .models import Booking
+from invoices.models import Invoice
 from properties.models import Property
 
 def calendar_view(request):
@@ -14,26 +14,23 @@ def calendar_view(request):
 
 def booking_api(request):
     property_id = request.GET.get('property')
-    bookings = Booking.objects.all()
+    # Filter for invoices that have dates set (though model fields are required)
+    invoices = Invoice.objects.filter(arrival_date__isnull=False, departure_date__isnull=False)
     
     if property_id:
-        bookings = bookings.filter(property_id=property_id)
+        invoices = invoices.filter(rental_property_id=property_id)
         
     events = []
-    for booking in bookings:
-        color = '#3b82f6' # Blue default
-        if booking.status == Booking.Status.CONFIRMED:
-            color = '#10b981' # Green
-        elif booking.status == Booking.Status.CANCELED:
-            color = '#ef4444' # Red
-            
+    for invoice in invoices:
+        # Default color for visits
+        color = '#3b82f6' 
+        
         events.append({
-            'id': booking.id,
-            'title': str(booking.customer), # Or booking.property.name + ' - ' + booking.customer.last_name
-            'start': booking.check_in.isoformat(),
-            'end': booking.check_out.isoformat(), # FullCalendar end date is exclusive, might need +1 day
+            'id': invoice.id,
+            'title': str(invoice.customer), 
+            'start': invoice.arrival_date.isoformat(),
+            'end': invoice.departure_date.isoformat(), 
             'color': color,
-            'url': reverse('customer_detail', args=[booking.customer.id]),
-            # 'extendedProps': {'price': booking.total_price}
+            'url': reverse('customer_detail', args=[invoice.customer.id]),
         })
     return JsonResponse(events, safe=False)
