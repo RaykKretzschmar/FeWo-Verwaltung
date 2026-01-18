@@ -85,7 +85,7 @@ def invoice_update(request, pk):
                 messages.success(request, "Rechnung erfolgreich aktualisiert.")
             except Exception as e:
                 messages.error(request, f"Fehler bei der Dokumentenerstellung: {e}")
-            return redirect("invoice_list") # or similar
+            return redirect("invoice_list")
     else:
         form = InvoiceForm(instance=invoice)
         # Filter foreign keys just like in create
