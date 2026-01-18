@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
+from django.urls import reverse
 from .models import Booking
 from properties.models import Property
 
@@ -32,6 +33,7 @@ def booking_api(request):
             'start': booking.check_in.isoformat(),
             'end': booking.check_out.isoformat(), # FullCalendar end date is exclusive, might need +1 day
             'color': color,
+            'url': reverse('customer_detail', args=[booking.customer.id]),
             # 'extendedProps': {'price': booking.total_price}
         })
     return JsonResponse(events, safe=False)

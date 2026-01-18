@@ -36,11 +36,8 @@
                 center: 'title',
                 right: 'dayGridMonth,timeGridWeek,timeGridDay'
             },
-            events: eventsUrl,
-            eventClick: function (info) {
-                alert('Buchung: ' + info.event.title);
-                // Future: Open modal with details
-            }
+            events: eventsUrl
+            // eventClick functionality is handled automatically by the 'url' property in the event object
         });
         calendar.render();
     });
