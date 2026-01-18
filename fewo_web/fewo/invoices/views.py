@@ -79,7 +79,6 @@ def invoice_update(request, pk):
         form = InvoiceForm(request.POST, instance=invoice)
         if form.is_valid():
             invoice = form.save(commit=False)
-            invoice.user = request.user
             invoice.save()
             try:
                 generate_invoice_documents(invoice)
