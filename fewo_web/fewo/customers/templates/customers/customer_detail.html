@@ -70,15 +70,18 @@
                     <td class="p-4">
                         {% if invoice.rental_property %}
                         <a href="{% url 'property_update' pk=invoice.rental_property.pk %}"
-                            class="text-blue-600 hover:underline">
+                            class="font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-100 px-2 py-1 rounded transition-colors inline-block">
                             {{ invoice.rental_property.name }}
                         </a>
                         {% else %}
-                        -
+                        <span class="text-slate-400">-</span>
                         {% endif %}
                     </td>
                     <td class="p-4">
-                        <a href="{% url 'invoice_update' pk=invoice.pk %}" class="text-blue-600 hover:underline">{{ invoice.invoice_number }}</a>
+                        <a href="{% url 'invoice_update' pk=invoice.pk %}"
+                            class="font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-100 px-2 py-1 rounded transition-colors inline-block">
+                            {{ invoice.invoice_number }}
+                        </a>
                     </td>
                     <td class="p-4">{{ invoice.total_price }} €</td>
                 </tr>
