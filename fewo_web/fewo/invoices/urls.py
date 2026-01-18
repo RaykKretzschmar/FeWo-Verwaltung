@@ -10,4 +10,5 @@ urlpatterns = [
         name="invoice_create_for_customer",
     ),
     path("<int:pk>/delete/", views.invoice_delete, name="invoice_delete"),
+    path("<int:pk>/update/", views.invoice_update, name="invoice_update"),
 ]

@@ -29,6 +29,8 @@
                 <td>
                     <div class="flex gap-2 flex-wrap">
                         <a href="{% url 'property_update' pk=property.pk %}" class="btn btn-outline">Bearbeiten</a>
+                        <a href="{% url 'calendar_view' %}?property={{ property.pk }}"
+                            class="btn btn-outline">Kalender</a>
                         <a href="{% url 'property_delete' pk=property.pk %}" class="btn btn-outline-danger">Löschen</a>
                     </div>
                 </td>
