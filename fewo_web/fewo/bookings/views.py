@@ -32,13 +32,9 @@ def booking_api(request):
         # Default color for visits
         color = '#3b82f6' 
 
-        customer = getattr(invoice, "customer", None)
-        if customer is not None:
-            title = str(customer)
-            customer_url = reverse('customer_detail', args=[customer.id])
-        else:
-            title = ''
-            customer_url = ''
+        customer = invoice.customer
+        title = str(customer)
+        customer_url = reverse('customer_detail', args=[customer.id])
 
         events.append({
             'id': invoice.id,
