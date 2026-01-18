@@ -28,6 +28,7 @@ urlpatterns = [
     path("invoices/", include("invoices.urls")),
     path("properties/", include("properties.urls")),
     path("accounts/", include("accounts.urls")),
+    path("bookings/", include("bookings.urls")),
     path("accounts/", include("django.contrib.auth.urls")),  # login/logout
     path("", views.landing, name="landing"),
     path("dashboard/", views.home, name="home"),

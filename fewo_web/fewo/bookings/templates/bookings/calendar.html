@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Buchungskalender - FeWo Verwaltung{% endblock %}
+
+{% block content %}
+<div class="container mx-auto">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-slate-800">
+            Buchungskalender {% if property %}- {{ property.name }}{% endif %}
+        </h1>
+        <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+            + Neue Buchung
+        </button>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+        <div id='calendar'></div>
+    </div>
+</div>
+
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var eventsUrl = '/bookings/api/bookings/';
+        {% if property %}
+        eventsUrl += '?property={{ property.id }}';
+        {% endif %}
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'de',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            events: eventsUrl,
+            eventClick: function (info) {
+                alert('Buchung: ' + info.event.title);
+                // Future: Open modal with details
+            }
+        });
+        calendar.render();
+    });
+</script>
+
+<style>
+    /* Custom FullCalendar Styles to match Tailwind/Project Theme */
+    :root {
+        --fc-border-color: #e2e8f0;
+        --fc-button-bg-color: #3b82f6;
+        --fc-button-border-color: #3b82f6;
+        --fc-button-hover-bg-color: #2563eb;
+        --fc-button-hover-border-color: #2563eb;
+        --fc-button-active-bg-color: #1d4ed8;
+        --fc-button-active-border-color: #1d4ed8;
+        --fc-today-bg-color: #eff6ff;
+    }
+
+    .fc .fc-toolbar-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1e293b;
+    }
+
+    .fc .fc-col-header-cell-cushion {
+        padding: 8px 0;
+        color: #475569;
+        font-weight: 600;
+    }
+
+    .fc-daygrid-day-number {
+        color: #475569;
+        text-decoration: none !important;
+    }
+</style>
+{% endblock %}
