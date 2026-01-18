@@ -67,7 +67,16 @@
                 <tr class="border-t hover:bg-gray-50">
                     <td class="p-4">{{ invoice.arrival_date|date:"d.m.Y" }}</td>
                     <td class="p-4">{{ invoice.departure_date|date:"d.m.Y" }}</td>
-                    <td class="p-4">{{ invoice.rental_property.name|default:"-" }}</td>
+                    <td class="p-4">
+                        {% if invoice.rental_property %}
+                        <a href="{% url 'property_update' pk=invoice.rental_property.pk %}"
+                            class="text-blue-600 hover:underline">
+                            {{ invoice.rental_property.name }}
+                        </a>
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
                     <td class="p-4">
                         <a href="{% url 'invoice_update' pk=invoice.pk %}" class="text-blue-600 hover:underline">{{ invoice.invoice_number }}</a>
                     </td>
