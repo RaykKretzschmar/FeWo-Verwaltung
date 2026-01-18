@@ -10,8 +10,13 @@ def calendar_view(request):
     property_id = request.GET.get('property')
     context = {}
     if property_id:
-        property_obj = get_object_or_404(Property, pk=property_id, user=request.user)
-        context['property'] = property_obj
+        try:
+            property_id = int(property_id)
+            property_obj = get_object_or_404(Property, pk=property_id, user=request.user)
+            context['property'] = property_obj
+        except (ValueError, TypeError):
+            # Invalid property_id, ignore it
+            pass
     return render(request, 'bookings/calendar.html', context)
 
 @login_required
@@ -25,7 +30,12 @@ def booking_api(request):
     )
     
     if property_id:
-        invoices = invoices.filter(rental_property_id=property_id)
+        try:
+            property_id = int(property_id)
+            invoices = invoices.filter(rental_property_id=property_id)
+        except (ValueError, TypeError):
+            # Invalid property_id, ignore the filter
+            pass
         
     events = []
     for invoice in invoices:
