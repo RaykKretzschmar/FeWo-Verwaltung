@@ -11,7 +11,7 @@ class Booking(models.Model):
         CONFIRMED = 'confirmed', _('Bestätigt')
         CANCELED = 'canceled', _('Storniert')
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='bookings', verbose_name=_("Ferienwohnung"))
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='bookings', verbose_name=_("Kunde"))
     check_in = models.DateField(verbose_name=_("Check-in"))
