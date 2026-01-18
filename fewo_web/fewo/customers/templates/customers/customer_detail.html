@@ -69,8 +69,8 @@
                     <td class="p-4">{{ invoice.departure_date|date:"d.m.Y" }}</td>
                     <td class="p-4">{{ invoice.rental_property.name|default:"-" }}</td>
                     <td class="p-4">
-                        <a href="#" class="text-blue-600 hover:underline">{{ invoice.invoice_number }}</a>
-                        <!-- TODO: Link to invoice detail/download if available -->
+                        <a href="{% url 'invoice_update' pk=invoice.pk %}" class="text-blue-600 hover:underline">{{
+                            invoice.invoice_number }}</a>
                     </td>
                     <td class="p-4">{{ invoice.total_price }} €</td>
                 </tr>

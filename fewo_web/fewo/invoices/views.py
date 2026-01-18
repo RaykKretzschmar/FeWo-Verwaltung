@@ -73,6 +73,31 @@ def invoice_create_for_customer(request, customer_id=None):
     )
 
 @login_required
+def invoice_update(request, pk):
+    invoice = get_object_or_404(Invoice, pk=pk, user=request.user)
+    if request.method == "POST":
+        form = InvoiceForm(request.POST, instance=invoice)
+        if form.is_valid():
+            invoice = form.save(commit=False)
+            invoice.user = request.user
+            invoice.save()
+            try:
+                generate_invoice_documents(invoice)
+                messages.success(request, "Rechnung erfolgreich aktualisiert.")
+            except Exception as e:
+                messages.error(request, f"Fehler bei der Dokumentenerstellung: {e}")
+            return redirect("invoice_list") # or similar
+    else:
+        form = InvoiceForm(instance=invoice)
+        # Filter foreign keys just like in create
+        form.fields['rental_property'].queryset = Property.objects.filter(user=request.user)
+        form.fields['customer'].queryset = Customer.objects.filter(user=request.user)
+
+    return render(
+        request, "invoices/invoice_form.html", {"form": form, "title": f"Rechnung {invoice.invoice_number} bearbeiten"}
+    )
+
+@login_required
 def invoice_delete(request, pk):
     invoice = get_object_or_404(Invoice, pk=pk, user=request.user)
     

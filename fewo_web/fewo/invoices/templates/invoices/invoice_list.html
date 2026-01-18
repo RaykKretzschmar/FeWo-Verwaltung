@@ -25,7 +25,11 @@
             <tr>
                 <td>{{ invoice.invoice_number }}</td>
                 <td>{{ invoice.date|date:"d.m.Y" }}</td>
-                <td>{{ invoice.customer }}</td>
+                <td>
+                    <a href="{% url 'customer_detail' pk=invoice.customer.pk %}" class="text-blue-600 hover:underline">
+                        {{ invoice.customer }}
+                    </a>
+                </td>
                 <td>{{ invoice.total_price }} €</td>
                 <td>
                     <div class="flex gap-2 flex-wrap">
@@ -41,9 +45,10 @@
                     </div>
                 </td>
                 <td>
-                    <a href="{% url 'invoice_delete' invoice.pk %}" class="btn btn-outline-danger">
-                        Löschen
-                    </a>
+                    <div class="flex gap-2">
+                        <a href="{% url 'invoice_update' pk=invoice.pk %}" class="btn btn-outline">Bearbeiten</a>
+                        <a href="{% url 'invoice_delete' pk=invoice.pk %}" class="btn btn-outline-danger">Löschen</a>
+                    </div>
                 </td>
             </tr>
             {% empty %}
