@@ -23,3 +23,5 @@ build.gradle
 *.spec
 
 test.*
+
+.env
