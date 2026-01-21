@@ -137,11 +137,15 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 
 # Content Security Policy
-CSP_DEFAULT_SRC = ("'self'",)
-CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
-CSP_SCRIPT_SRC = ("'self'",)
-CSP_IMG_SRC = ("'self'", "data:")
-CSP_FONT_SRC = ("'self'", "data:")
+CONTENT_SECURITY_POLICY = {
+    "DIRECTIVES": {
+        "default-src": ["'self'"],
+        "style-src": ["'self'", "'unsafe-inline'"],
+        "script-src": ["'self'"],
+        "img-src": ["'self'", "data:"],
+        "font-src": ["'self'", "data:"],
+    }
+}
 
 LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "landing"
