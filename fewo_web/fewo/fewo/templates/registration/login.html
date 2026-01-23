@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Anmelden - FeWo Verwaltung{% endblock %}
 
@@ -14,7 +15,7 @@
 {% block content %}
 <div class="card" style="max-width: 400px; margin: 2rem auto;">
     <h1 class="text-xl font-bold mb-4 text-center">Anmelden</h1>
-    <form method="post">
+    <form method="post" id="loginForm">
         {% csrf_token %}
         <div class="form-group">
             <label class="form-label" for="id_username">Benutzername</label>
@@ -28,6 +29,7 @@
         </div>
         <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Anmelden</button>
     </form>
+    <script src="{% static 'js/login.js' %}"></script>
     <div class="text-center mt-4">
         <p>Noch kein Konto? <a href="{% url 'signup' %}" style="color: var(--primary);">Registrieren</a></p>
     </div>
