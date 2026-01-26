@@ -1,5 +1,12 @@
 /* Custom CSS for FeWo Verwaltung */
 
+:root {
+    --primary: #2563eb;       /* Blue 600 */
+    --border: #cbd5e1;        /* Slate 300 */
+    --text-light: #64748b;    /* Slate 500 */
+    --danger: #ef4444;        /* Red 500 */
+}
+
 /* General Styles */
 body {
     font-family: Arial, sans-serif;
