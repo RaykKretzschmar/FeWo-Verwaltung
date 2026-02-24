@@ -49,3 +49,9 @@ class CustomerModelTest(TestCase):
             house_number="10"
         )
         self.assertEqual(company_customer.__str__(), "Test GmbH")
+
+    def test_familie_salutation_is_available(self):
+        self.assertIn(
+            (Customer.SALUTATION_FAMILIE, "Familie"),
+            Customer.SALUTATION_CHOICES,
+        )

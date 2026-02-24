@@ -234,10 +234,12 @@ def generate_invoice_documents(invoice: Invoice):
         else:
             # Standard salutation logic
             title_part = f" {c.title}" if c.title else ""
-            if c.salutation == "Herr":
+            if c.salutation == Customer.SALUTATION_HERR:
                 greeting = f"Sehr geehrter Herr{title_part} {c.last_name}"
-            elif c.salutation == "Frau":
+            elif c.salutation == Customer.SALUTATION_FRAU:
                 greeting = f"Sehr geehrte Frau{title_part} {c.last_name}"
+            elif c.salutation == Customer.SALUTATION_FAMILIE:
+                greeting = f"Sehr geehrte Familie {c.last_name}"
             else:
                 # Fallback for Divers or empty
                 greeting = f"Guten Tag{title_part} {c.first_name} {c.last_name}"

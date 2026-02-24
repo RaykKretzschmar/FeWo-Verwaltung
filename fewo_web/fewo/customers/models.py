@@ -15,11 +15,13 @@ class Customer(models.Model):
     SALUTATION_HERR = "Herr"
     SALUTATION_FRAU = "Frau"
     SALUTATION_DIVERS = "Divers"
+    SALUTATION_FAMILIE = "Familie"
     SALUTATION_CHOICES = [
         ("", "---"),
         (SALUTATION_HERR, "Herr"),
         (SALUTATION_FRAU, "Frau"),
         (SALUTATION_DIVERS, "Divers"),
+        (SALUTATION_FAMILIE, "Familie"),
     ]
 
     customer_type = models.CharField(

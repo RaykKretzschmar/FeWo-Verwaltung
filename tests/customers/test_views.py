@@ -55,6 +55,21 @@ class CustomerViewTest(TestCase):
         self.customer.refresh_from_db()
         self.assertEqual(self.customer.first_name, 'Maximilian')
 
+    def test_customer_create_view_with_familie_salutation(self):
+        response = self.client.post(reverse('customer_create'), {
+            'first_name': 'Anna',
+            'last_name': 'Muster',
+            'city': 'Leipzig',
+            'postal_code': '04109',
+            'street': 'Markt',
+            'house_number': '2',
+            'customer_type': 'Privat',
+            'salutation': 'Familie'
+        })
+        self.assertEqual(response.status_code, 302)
+        created_customer = Customer.objects.get(first_name='Anna', last_name='Muster')
+        self.assertEqual(created_customer.salutation, 'Familie')
+
     def test_customer_delete_view(self):
         response = self.client.post(reverse('customer_delete', args=[self.customer.pk]))
         self.assertEqual(response.status_code, 302)
