@@ -1,58 +1,149 @@
 {% extends 'base.html' %}
 
-{% block title %}Impressum - FeWo Verwaltung{% endblock %}
-
-{% block sidebar %}{% endblock %}
-
-{% block header_logo %}
-<header style="padding: 1.5rem 2rem; background: white; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);">
-    <a href="{% url 'landing' %}"
-        style="font-size: 1.5rem; font-weight: 700; color: var(--primary); text-decoration: none;">FeWo Verwaltung</a>
-</header>
-{% endblock %}
-
 {% block content %}
-<div class="card" style="max-width: 800px; margin: 0 auto;">
-    <h1 class="text-xl font-bold mb-4">Impressum</h1>
 
-    <h2 class="text-lg font-bold mt-6 mb-2">Angaben gemäß § 5 TMG</h2>
-    <p>
-        Max Mustermann<br>
-        Musterstraße 1<br>
-        12345 Musterstadt
-    </p>
+<style>
+    /* Wiederverwendbare Styles für Rechtstexte 
+       (Idealweise später in eine style.css auslagern)
+    */
+    .legal-container {
+        max-width: 800px;
+        margin: 60px auto;
+        padding: 0 20px;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        color: #334155;
+        line-height: 1.7;
+    }
 
-    <h2 class="text-lg font-bold mt-6 mb-2">Kontakt</h2>
-    <p>
-        Telefon: +49 (0) 123 44 55 66<br>
-        E-Mail: info@muster-fewo.de
-    </p>
+    .legal-card {
+        background-color: #ffffff;
+        padding: 50px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+    }
 
-    <h2 class="text-lg font-bold mt-6 mb-2">Umsatzsteuer-ID</h2>
-    <p>
-        Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:<br>
-        DE 123 456 789
-    </p>
+    .legal-card h1 {
+        text-align: center;
+        margin-bottom: 40px;
+        font-weight: 700;
+        color: #0f172a;
+        font-size: 2.5rem;
+    }
 
-    <h2 class="text-lg font-bold mt-6 mb-2">Redaktionell verantwortlich</h2>
-    <p>
-        Max Mustermann<br>
-        Musterstraße 1<br>
-        12345 Musterstadt
-    </p>
+    .legal-card h2 {
+        margin-top: 40px;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e2e8f0;
+        color: #1e293b;
+        font-size: 1.5rem;
+    }
 
-    <h2 class="text-lg font-bold mt-6 mb-2">EU-Streitschlichtung</h2>
-    <p>
-        Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:
-        <a href="https://ec.europa.eu/consumers/odr/" target="_blank"
-            rel="noopener noreferrer">https://ec.europa.eu/consumers/odr/</a>.<br>
-        Unsere E-Mail-Adresse finden Sie oben im Impressum.
-    </p>
+    .legal-card h3 {
+        margin-top: 30px;
+        margin-bottom: 10px;
+        color: #0f172a; /* Etwas dunkler für bessere Lesbarkeit */
+        font-size: 1.15rem;
+        font-weight: 600;
+    }
 
-    <h2 class="text-lg font-bold mt-6 mb-2">Verbraucherstreitbeilegung/Universalschlichtungsstelle</h2>
-    <p>
-        Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle
-        teilzunehmen.
-    </p>
+    .legal-card p {
+        margin-bottom: 1.2rem;
+        text-align: justify; /* Blocksatz sieht bei Rechtstexten oft ordentlicher aus, optional */
+        hyphens: auto; /* Automatische Silbentrennung */
+    }
+
+    .legal-card a {
+        color: #2563eb;
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+        transition: border-color 0.2s;
+    }
+
+    .legal-card a:hover {
+        border-bottom-color: #2563eb;
+    }
+
+    .legal-card hr {
+        border: 0;
+        height: 1px;
+        background: #e2e8f0;
+        margin: 50px 0;
+    }
+
+    /* Spezifische Box für die Betreiberdaten */
+    .impressum-data {
+        background-color: #f8fafc;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 4px solid #64748b; /* Neutrales Grau */
+        margin-bottom: 30px;
+    }
+    
+    .impressum-data p {
+        margin-bottom: 0;
+        text-align: left; /* Hier kein Blocksatz */
+    }
+
+    /* Responsive Anpassung */
+    @media (max-width: 600px) {
+        .legal-card { padding: 25px; }
+        .legal-container { margin: 30px auto; }
+        .legal-card h1 { font-size: 2rem; }
+    }
+</style>
+
+<div class="legal-container">
+    <div class="legal-card">
+
+        <h1>Impressum</h1>
+
+        <h2>Angaben gemäß § 5 TMG</h2>
+        <div class="impressum-data">
+            <p>
+                <strong>Rayk Kretzschmar</strong><br>
+                Dornburger Str. 21<br>
+                07743 Jena
+            </p>
+        </div>
+
+        <h2>Kontakt</h2>
+        <div class="impressum-data" style="border-left-color: #2563eb;"> <p>
+                E-Mail: <a href="mailto:kretzschmar@rayk.dev">kretzschmar@rayk.dev</a>
+            </p>
+        </div>
+
+        <h2>Redaktionell verantwortlich</h2>
+        <p>
+            Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV:<br>
+            <br>
+            Rayk Kretzschmar<br>
+            Dornburger Str. 21<br>
+            07743 Jena
+        </p>
+
+        <hr>
+
+        <h3>Haftung für Inhalte</h3>
+        <p>Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.</p>
+        <p>Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.</p>
+
+        <h3>Haftung für Links</h3>
+        <p>Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar.</p>
+        <p>Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.</p>
+
+        <h3>Urheberrecht</h3>
+        <p>Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet.</p>
+        <p>Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden die Urheberrechte Dritter beachtet. Insbesondere werden Inhalte Dritter als solche gekennzeichnet. Sollten Sie trotzdem auf eine Urheberrechtsverletzung aufmerksam werden, bitten wir um einen entsprechenden Hinweis. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Inhalte umgehend entfernen.</p>
+
+        <hr>
+        
+        <h3>Streitschlichtung</h3>
+        <p>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener noreferrer">https://ec.europa.eu/consumers/odr/</a>.<br>
+        Unsere E-Mail-Adresse finden Sie oben im Impressum.</p>
+        <p>Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+
+    </div>
 </div>
+
 {% endblock %}
