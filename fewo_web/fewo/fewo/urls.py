@@ -18,12 +18,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from . import views
+import views_robots
 from django.conf import settings
 from django.conf.urls.static import static
 
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path("boss/", admin.site.urls),
     path("customers/", include("customers.urls")),
     path("invoices/", include("invoices.urls")),
     path("properties/", include("properties.urls")),
@@ -34,6 +35,7 @@ urlpatterns = [
     path("dashboard/", views.home, name="home"),
     path("impressum/", views.impressum, name="impressum"),
     path("datenschutz/", views.datenschutz, name="datenschutz"),
+    path("robots.txt", views_robots.robots_txt, name="robots_txt"),
 ]
 
 # Serve media files during development
