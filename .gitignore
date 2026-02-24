@@ -13,6 +13,7 @@ __pycache__/
 .env
 staticfiles/
 fewo_web/fewo/static/css/output.css
+fewo_web/fewo/fewo/settings_production.py
 
 # =============================================================================
 # Virtual Environment
