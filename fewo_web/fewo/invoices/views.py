@@ -118,12 +118,18 @@ def invoice_delete(request, pk):
     return render(request, "invoices/invoice_confirm_delete.html", {"invoice": invoice})
 
 def replace_text_in_doc(doc, replacements):
+    def normalize_docx_text(value):
+        text = str(value)
+        # python-docx converts both \r and \n to line breaks in run.text.
+        # Normalize CRLF/CR to LF so textarea values don't create double breaks.
+        return text.replace("\r\n", "\n").replace("\r", "\n")
+
     def replace_in_paragraphs(paragraphs):
         for p in paragraphs:
             for run in p.runs:
                 for old_text, new_text in replacements.items():
                     if old_text in run.text:
-                        run.text = run.text.replace(str(old_text), str(new_text))
+                        run.text = run.text.replace(str(old_text), normalize_docx_text(new_text))
 
     def replace_in_tables(tables):
         for table in tables:
