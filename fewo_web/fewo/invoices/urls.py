@@ -11,4 +11,5 @@ urlpatterns = [
     ),
     path("<int:pk>/delete/", views.invoice_delete, name="invoice_delete"),
     path("<int:pk>/update/", views.invoice_update, name="invoice_update"),
+    path("<int:pk>/download/<str:file_type>/", views.invoice_download, name="invoice_download"),
 ]

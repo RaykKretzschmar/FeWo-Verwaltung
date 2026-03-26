@@ -35,10 +35,10 @@
                 <td>
                     <div class="flex gap-2 flex-wrap">
                         {% if invoice.pdf_file %}
-                        <a href="{{ invoice.pdf_file.url }}" class="btn btn-outline" target="_blank">PDF</a>
+                        <a href="{% url 'invoice_download' pk=invoice.pk file_type='pdf' %}" class="btn btn-outline" target="_blank">PDF</a>
                         {% endif %}
                         {% if invoice.docx_file %}
-                        <a href="{{ invoice.docx_file.url }}" class="btn btn-outline" target="_blank">DOCX</a>
+                        <a href="{% url 'invoice_download' pk=invoice.pk file_type='docx' %}" class="btn btn-outline" target="_blank">DOCX</a>
                         {% endif %}
                         {% if not invoice.pdf_file and not invoice.docx_file %}
                         <span style="color: var(--text-light);">Keine Dateien</span>

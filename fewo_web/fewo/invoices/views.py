@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import FileResponse, Http404
 from .models import Invoice
 from .forms import InvoiceForm
 from customers.models import Customer
@@ -295,4 +296,23 @@ def generate_invoice_documents(invoice: Invoice):
     # Cleanup temp docx
     if os.path.exists(temp_docx):
         os.remove(temp_docx)
+
+
+@login_required
+def invoice_download(request, pk, file_type):
+    invoice = get_object_or_404(Invoice, pk=pk, user=request.user)
+
+    if file_type == "pdf":
+        file_field = invoice.pdf_file
+        content_type = "application/pdf"
+    elif file_type == "docx":
+        file_field = invoice.docx_file
+        content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    else:
+        raise Http404("Ungültiger Dateityp.")
+
+    if not file_field or not file_field.name:
+        raise Http404("Datei nicht gefunden.")
+
+    return FileResponse(file_field.open("rb"), content_type=content_type, as_attachment=True, filename=os.path.basename(file_field.name))
 
