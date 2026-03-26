@@ -12,6 +12,11 @@ import os
 from docx import Document
 # import pythoncom
 
+
+def _set_invoice_form_querysets(form, user):
+    form.fields["rental_property"].queryset = Property.objects.filter(user=user)
+    form.fields["customer"].queryset = Customer.objects.filter(user=user)
+
 @login_required
 def invoice_list(request):
     invoices = Invoice.objects.filter(user=request.user).order_by("-date")
@@ -21,6 +26,7 @@ def invoice_list(request):
 def invoice_create(request):
     if request.method == "POST":
         form = InvoiceForm(request.POST)
+        _set_invoice_form_querysets(form, request.user)
         # Filter properties in form if needed, but for now just handle save
         if form.is_valid():
             invoice = form.save(commit=False)
@@ -34,10 +40,7 @@ def invoice_create(request):
             return redirect("invoice_list")
     else:
         form = InvoiceForm()
-        # Ideally filter foreign keys in form here, but standard form usage might show all. 
-        # For strict isolation, we should update forms too, but let's start with view logic.
-        form.fields['rental_property'].queryset = Property.objects.filter(user=request.user)
-        form.fields['customer'].queryset = Customer.objects.filter(user=request.user)
+        _set_invoice_form_querysets(form, request.user)
 
     return render(request, "invoices/invoice_form.html", {"form": form, "title": "Neue Rechnung"})
 
@@ -49,6 +52,7 @@ def invoice_create_for_customer(request, customer_id=None):
 
     if request.method == "POST":
         form = InvoiceForm(request.POST)
+        _set_invoice_form_querysets(form, request.user)
         if form.is_valid():
             invoice = form.save(commit=False)
             invoice.user = request.user
@@ -66,8 +70,7 @@ def invoice_create_for_customer(request, customer_id=None):
         if customer:
             initial["customer"] = customer
         form = InvoiceForm(initial=initial)
-        form.fields['rental_property'].queryset = Property.objects.filter(user=request.user)
-        form.fields['customer'].queryset = Customer.objects.filter(user=request.user)
+        _set_invoice_form_querysets(form, request.user)
 
     return render(
         request, "invoices/invoice_form.html", {"form": form, "customer": customer, "title": "Rechnung erstellen"}
@@ -78,6 +81,7 @@ def invoice_update(request, pk):
     invoice = get_object_or_404(Invoice, pk=pk, user=request.user)
     if request.method == "POST":
         form = InvoiceForm(request.POST, instance=invoice)
+        _set_invoice_form_querysets(form, request.user)
         if form.is_valid():
             invoice = form.save(commit=False)
             invoice.save()
@@ -89,9 +93,7 @@ def invoice_update(request, pk):
             return redirect("invoice_list")
     else:
         form = InvoiceForm(instance=invoice)
-        # Filter foreign keys just like in create
-        form.fields['rental_property'].queryset = Property.objects.filter(user=request.user)
-        form.fields['customer'].queryset = Customer.objects.filter(user=request.user)
+        _set_invoice_form_querysets(form, request.user)
 
     return render(
         request, "invoices/invoice_form.html", {"form": form, "title": f"Rechnung {invoice.invoice_number} bearbeiten"}
@@ -195,14 +197,14 @@ def generate_invoice_documents(invoice: Invoice):
             replacements["Bankverbindung"] = ""
             
         if profile.tax_number:
-            replacements["Steuernummer"] = profile.tax_number
+            replacements["StNr"] = profile.tax_number
         else:
-            replacements["Steuernummer"] = ""
+            replacements["StNr"] = ""
     except Exception:
         # Fallback if no profile exists
         landlord_address = "Vermieter Adresse nicht konfiguriert"
         replacements["Bankverbindung"] = ""
-        replacements["Steuernummer"] = ""
+        replacements["StNr"] = ""
 
     replacements["{Vermieter_Anschrift}"] = landlord_address
     # Also support without braces if that's how it ended up (though script put braces)
