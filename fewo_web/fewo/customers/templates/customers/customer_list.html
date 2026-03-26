@@ -20,18 +20,27 @@
         </thead>
         <tbody>
             {% for customer in customers %}
-            <tr onclick="window.location='{% url 'customer_detail' pk=customer.pk %}'"
-                class="hover:bg-gray-50 cursor-pointer transition-colors">
+            <tr class="hover:bg-gray-50 cursor-pointer transition-colors">
                 <td class="font-medium">
-                    {% if customer.customer_type == 'Firma' %}
-                    {{ customer.company_name }} (Firma)
-                    {% else %}
-                    {{ customer.first_name }} {{ customer.last_name }}
-                    {% endif %}
+                    <a href="{% url 'customer_detail' pk=customer.pk %}" class="block py-4 px-4 -mx-4 -my-4">
+                        {% if customer.customer_type == 'Firma' %}
+                        {{ customer.company_name }} (Firma)
+                        {% else %}
+                        {{ customer.first_name }} {{ customer.last_name }}
+                        {% endif %}
+                    </a>
                 </td>
-                <td>{{ customer.city }}</td>
-                <td>{{ customer.customer_number }}</td>
-                <td onclick="event.stopPropagation()">
+                <td class="py-4">
+                    <a href="{% url 'customer_detail' pk=customer.pk %}" class="text-inherit hover:text-inherit">
+                        {{ customer.city }}
+                    </a>
+                </td>
+                <td class="py-4">
+                    <a href="{% url 'customer_detail' pk=customer.pk %}" class="text-inherit hover:text-inherit">
+                        {{ customer.customer_number }}
+                    </a>
+                </td>
+                <td class="py-4">
                     <div class="flex gap-2 flex-wrap">
                         <a href="{% url 'customer_update' pk=customer.pk %}" class="btn btn-outline">Bearbeiten</a>
                         <a href="{% url 'customer_delete' pk=customer.pk %}" class="btn btn-outline-danger">Löschen</a>
