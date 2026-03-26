@@ -120,20 +120,35 @@ def invoice_delete(request, pk):
     return render(request, "invoices/invoice_confirm_delete.html", {"invoice": invoice})
 
 def replace_text_in_doc(doc, replacements):
-    for p in doc.paragraphs:
-        for run in p.runs:
-            for old_text, new_text in replacements.items():
-                if old_text in run.text:
-                    run.text = run.text.replace(str(old_text), str(new_text))
-    
-    for table in doc.tables:
-        for row in table.rows:
-            for cell in row.cells:
-                for paragraph in cell.paragraphs:
-                    for run in paragraph.runs:
-                        for old_text, new_text in replacements.items():
-                            if old_text in run.text:
-                                run.text = run.text.replace(str(old_text), str(new_text))
+    def normalize_docx_text(value):
+        text = str(value)
+        # python-docx converts both \r and \n to line breaks in run.text.
+        # Normalize CRLF/CR to LF so textarea values don't create double breaks.
+        return text.replace("\r\n", "\n").replace("\r", "\n")
+
+    def replace_in_paragraphs(paragraphs):
+        for p in paragraphs:
+            for run in p.runs:
+                for old_text, new_text in replacements.items():
+                    if old_text in run.text:
+                        run.text = run.text.replace(str(old_text), normalize_docx_text(new_text))
+
+    def replace_in_tables(tables):
+        for table in tables:
+            for row in table.rows:
+                for cell in row.cells:
+                    replace_in_paragraphs(cell.paragraphs)
+                    replace_in_tables(cell.tables)
+
+    replace_in_paragraphs(doc.paragraphs)
+    replace_in_tables(doc.tables)
+
+    # Header/Footer are separate parts in DOCX and must be processed explicitly.
+    for section in doc.sections:
+        replace_in_paragraphs(section.header.paragraphs)
+        replace_in_tables(section.header.tables)
+        replace_in_paragraphs(section.footer.paragraphs)
+        replace_in_tables(section.footer.tables)
 
 def generate_invoice_documents(invoice: Invoice):
     # Path to template
