@@ -195,14 +195,14 @@ def generate_invoice_documents(invoice: Invoice):
             replacements["Bankverbindung"] = ""
             
         if profile.tax_number:
-            replacements["Steuernummer"] = profile.tax_number
+            replacements["StNr"] = profile.tax_number
         else:
-            replacements["Steuernummer"] = ""
+            replacements["StNr"] = ""
     except Exception:
         # Fallback if no profile exists
         landlord_address = "Vermieter Adresse nicht konfiguriert"
         replacements["Bankverbindung"] = ""
-        replacements["Steuernummer"] = ""
+        replacements["StNr"] = ""
 
     replacements["{Vermieter_Anschrift}"] = landlord_address
     # Also support without braces if that's how it ended up (though script put braces)
