@@ -18,10 +18,15 @@ class InvoiceForm(forms.ModelForm):
             "tax_percent",
         ]
         widgets = {
-            "date": forms.DateInput(attrs={"type": "date"}),
-            "arrival_date": forms.DateInput(attrs={"type": "date"}),
-            "departure_date": forms.DateInput(attrs={"type": "date"}),
+            "date": forms.DateInput(format="%Y-%m-%d", attrs={"type": "date"}),
+            "arrival_date": forms.DateInput(format="%Y-%m-%d", attrs={"type": "date"}),
+            "departure_date": forms.DateInput(format="%Y-%m-%d", attrs={"type": "date"}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name in ("date", "arrival_date", "departure_date"):
+            self.fields[field_name].input_formats = ["%Y-%m-%d", "%d.%m.%Y"]
 
     def clean(self):
         cleaned_data = super().clean()
