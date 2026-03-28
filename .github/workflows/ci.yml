@@ -28,8 +28,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          python -m pip install --upgrade pip setuptools wheel
+          pip install --extra-index-url https://www.piwheels.org/simple -r requirements.txt
 
       - name: Run tests
         run: python fewo_web/fewo/manage.py test tests
