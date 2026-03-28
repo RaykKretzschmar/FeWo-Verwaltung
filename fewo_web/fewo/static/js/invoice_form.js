@@ -3,6 +3,21 @@ document.addEventListener('DOMContentLoaded', function () {
     const priceInput = document.getElementById('id_price_per_night');
     const breakfastPriceInput = document.getElementById('id_breakfast_price');
     const taxPercentInput = document.getElementById('id_tax_percent');
+    const includeBreakfastCheckbox = document.getElementById('id_include_breakfast');
+
+    function toggleBreakfastPrice() {
+        if (breakfastPriceInput && includeBreakfastCheckbox) {
+            const group = breakfastPriceInput.closest('.form-group');
+            if (group) {
+                group.style.display = includeBreakfastCheckbox.checked ? 'block' : 'none';
+            }
+        }
+    }
+
+    if (includeBreakfastCheckbox) {
+        includeBreakfastCheckbox.addEventListener('change', toggleBreakfastPrice);
+        toggleBreakfastPrice();
+    }
 
     function loadPropertyDetails(propertyId) {
         if (!propertyId) return;
